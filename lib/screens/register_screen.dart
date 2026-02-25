@@ -1,7 +1,7 @@
+// register_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui';
-
 import '../state/onboarding_controller.dart';
 import '../widgets/auth_widgets.dart';
 import 'login_screen.dart';

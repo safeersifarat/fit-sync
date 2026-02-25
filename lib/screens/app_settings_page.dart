@@ -212,9 +212,7 @@ class _SettingsTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final textColor = isDark ? Colors.white : const Color(0xFF1A1A1A);
-    final subtitleColor = isDark
-        ? Colors.white.withValues(alpha: 0.6)
-        : const Color(0xFF6A6A6A);
+    final subtitleColor = isDark ? Colors.white.withValues(alpha: 0.6) : const Color(0xFF6A6A6A);
 
     return GlassCard(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
