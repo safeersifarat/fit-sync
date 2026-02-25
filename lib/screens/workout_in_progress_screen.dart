@@ -23,4 +23,3 @@ class WorkoutInProgressScreen extends StatelessWidget {
     );
   }
 }
-

@@ -103,9 +103,7 @@ class CalorieTrackerController extends ChangeNotifier {
     try {
       final savedEntries = _storage!.getMealEntries();
       _entries.clear();
-      _entries.addAll(
-        savedEntries.map((json) => MealEntry.fromJson(json)),
-      );
+      _entries.addAll(savedEntries.map((json) => MealEntry.fromJson(json)));
     } catch (e) {
       ErrorHandler.logError(e);
       _errorMessage = 'Failed to load meal entries';
@@ -121,26 +119,32 @@ class CalorieTrackerController extends ChangeNotifier {
       await _storage!.saveMealEntries(entriesJson);
     } catch (e) {
       ErrorHandler.logError(e);
-      throw StorageException('Failed to save meal entries: ${ErrorHandler.getErrorMessage(e)}');
+      throw StorageException(
+        'Failed to save meal entries: ${ErrorHandler.getErrorMessage(e)}',
+      );
     }
   }
 
   List<MealEntry> mealsForSelectedDate(MealType type) {
     return _entries
-        .where((e) =>
-            e.type == type &&
-            e.date.year == selectedDate.year &&
-            e.date.month == selectedDate.month &&
-            e.date.day == selectedDate.day)
+        .where(
+          (e) =>
+              e.type == type &&
+              e.date.year == selectedDate.year &&
+              e.date.month == selectedDate.month &&
+              e.date.day == selectedDate.day,
+        )
         .toList();
   }
 
   double get totalCaloriesForSelectedDate {
     return _entries
-        .where((e) =>
-            e.date.year == selectedDate.year &&
-            e.date.month == selectedDate.month &&
-            e.date.day == selectedDate.day)
+        .where(
+          (e) =>
+              e.date.year == selectedDate.year &&
+              e.date.month == selectedDate.month &&
+              e.date.day == selectedDate.day,
+        )
         .fold(0.0, (sum, e) => sum + (e.estimatedCalories ?? 0));
   }
 

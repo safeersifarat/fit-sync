@@ -35,4 +35,3 @@ class DetectedFood {
   final String name;
   final int calories;
 }
-

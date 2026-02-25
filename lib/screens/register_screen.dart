@@ -105,9 +105,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (!mounted) return;
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => const OnboardingSplashScreen(),
-      ),
+      MaterialPageRoute(builder: (_) => const OnboardingSplashScreen()),
     );
   }
 
@@ -200,26 +198,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            Colors.redAccent.withOpacity(0.2),
-                            Colors.redAccent.withOpacity(0.1),
+                            Colors.redAccent.withValues(alpha: 0.2),
+                            Colors.redAccent.withValues(alpha: 0.1),
                           ],
                         ),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: Colors.redAccent.withOpacity(0.3),
+                          color: Colors.redAccent.withValues(alpha: 0.3),
                           width: 1.5,
                         ),
                       ),
                       child: Text(
                         _error!,
                         style: TextStyle(
-                          color: Colors.redAccent.withOpacity(0.9),
+                          color: Colors.redAccent.withValues(alpha: 0.9),
                           fontSize: 13,
                           letterSpacing: -0.2,
                         ),
@@ -231,10 +232,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ],
 
               // Register Button
-              PrimaryButton(
-                label: 'Create Account',
-                onPressed: _onRegister,
-              ),
+              PrimaryButton(label: 'Create Account', onPressed: _onRegister),
               const SizedBox(height: 16),
 
               // Login Link
@@ -244,7 +242,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Text(
                     'Already have an account? ',
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.7),
+                      color: Colors.white.withValues(alpha: 0.7),
                       letterSpacing: -0.2,
                     ),
                   ),
@@ -252,9 +250,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) => const LoginScreen(),
-                        ),
+                        MaterialPageRoute(builder: (_) => const LoginScreen()),
                       );
                     },
                     child: const Text(
@@ -279,7 +275,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Text(
       title,
       style: TextStyle(
-        color: Colors.white.withOpacity(0.9),
+        color: Colors.white.withValues(alpha: 0.9),
         fontSize: 14,
         fontWeight: FontWeight.w600,
         letterSpacing: -0.3,
@@ -299,13 +295,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Colors.white.withOpacity(0.15),
-                Colors.white.withOpacity(0.1),
+                Colors.white.withValues(alpha: 0.15),
+                Colors.white.withValues(alpha: 0.1),
               ],
             ),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               width: 1.5,
             ),
           ),
@@ -326,7 +322,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Text(
                     'years',
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.6),
+                      color: Colors.white.withValues(alpha: 0.6),
                       fontSize: 14,
                       letterSpacing: -0.2,
                     ),
@@ -337,10 +333,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               SliderTheme(
                 data: SliderTheme.of(context).copyWith(
                   activeTrackColor: kLimeAccent,
-                  inactiveTrackColor: Colors.white.withOpacity(0.2),
+                  inactiveTrackColor: Colors.white.withValues(alpha: 0.2),
                   thumbColor: kLimeAccent,
-                  overlayColor: kLimeAccent.withOpacity(0.2),
-                  thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
+                  overlayColor: kLimeAccent.withValues(alpha: 0.2),
+                  thumbShape: const RoundSliderThumbShape(
+                    enabledThumbRadius: 10,
+                  ),
                   trackHeight: 4,
                 ),
                 child: Slider(
@@ -378,13 +376,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Colors.white.withOpacity(0.15),
-                Colors.white.withOpacity(0.1),
+                Colors.white.withValues(alpha: 0.15),
+                Colors.white.withValues(alpha: 0.1),
               ],
             ),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               width: 1.5,
             ),
           ),
@@ -423,10 +421,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               SliderTheme(
                 data: SliderTheme.of(context).copyWith(
                   activeTrackColor: kLimeAccent,
-                  inactiveTrackColor: Colors.white.withOpacity(0.2),
+                  inactiveTrackColor: Colors.white.withValues(alpha: 0.2),
                   thumbColor: kLimeAccent,
-                  overlayColor: kLimeAccent.withOpacity(0.2),
-                  thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
+                  overlayColor: kLimeAccent.withValues(alpha: 0.2),
+                  thumbShape: const RoundSliderThumbShape(
+                    enabledThumbRadius: 10,
+                  ),
                   trackHeight: 4,
                 ),
                 child: Slider(
@@ -470,13 +470,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Colors.white.withOpacity(0.15),
-                Colors.white.withOpacity(0.1),
+                Colors.white.withValues(alpha: 0.15),
+                Colors.white.withValues(alpha: 0.1),
               ],
             ),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               width: 1.5,
             ),
           ),
@@ -515,10 +515,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               SliderTheme(
                 data: SliderTheme.of(context).copyWith(
                   activeTrackColor: kLimeAccent,
-                  inactiveTrackColor: Colors.white.withOpacity(0.2),
+                  inactiveTrackColor: Colors.white.withValues(alpha: 0.2),
                   thumbColor: kLimeAccent,
-                  overlayColor: kLimeAccent.withOpacity(0.2),
-                  thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
+                  overlayColor: kLimeAccent.withValues(alpha: 0.2),
+                  thumbShape: const RoundSliderThumbShape(
+                    enabledThumbRadius: 10,
+                  ),
                   trackHeight: 4,
                 ),
                 child: Slider(
@@ -561,13 +563,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Colors.white.withOpacity(0.2),
-                Colors.white.withOpacity(0.1),
+                Colors.white.withValues(alpha: 0.2),
+                Colors.white.withValues(alpha: 0.1),
               ],
             ),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: Colors.white.withOpacity(0.3),
+              color: Colors.white.withValues(alpha: 0.3),
               width: 1,
             ),
           ),
@@ -607,8 +609,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    kLimeAccent.withOpacity(0.3),
-                    kLimeAccent.withOpacity(0.2),
+                    kLimeAccent.withValues(alpha: 0.3),
+                    kLimeAccent.withValues(alpha: 0.2),
                   ],
                 )
               : null,
@@ -617,7 +619,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Text(
           label,
           style: TextStyle(
-            color: selected ? kLimeAccent : Colors.white.withOpacity(0.6),
+            color: selected ? kLimeAccent : Colors.white.withValues(alpha: 0.6),
             fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
             fontSize: 13,
             letterSpacing: -0.2,
@@ -667,29 +669,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    kLimeAccent.withOpacity(0.3),
-                    kLimeAccent.withOpacity(0.2),
+                    kLimeAccent.withValues(alpha: 0.3),
+                    kLimeAccent.withValues(alpha: 0.2),
                   ],
                 )
               : LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.white.withOpacity(0.1),
-                    Colors.white.withOpacity(0.05),
+                    Colors.white.withValues(alpha: 0.1),
+                    Colors.white.withValues(alpha: 0.05),
                   ],
                 ),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: selected
-                ? kLimeAccent.withOpacity(0.5)
-                : Colors.white.withOpacity(0.2),
+                ? kLimeAccent.withValues(alpha: 0.5)
+                : Colors.white.withValues(alpha: 0.2),
             width: selected ? 2 : 1.5,
           ),
           boxShadow: selected
               ? [
                   BoxShadow(
-                    color: kLimeAccent.withOpacity(0.2),
+                    color: kLimeAccent.withValues(alpha: 0.2),
                     blurRadius: 8,
                     spreadRadius: 0,
                   ),
@@ -699,7 +701,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Text(
           label,
           style: TextStyle(
-            color: selected ? kLimeAccent : Colors.white.withOpacity(0.8),
+            color: selected ? kLimeAccent : Colors.white.withValues(alpha: 0.8),
             fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
             fontSize: 14,
             letterSpacing: -0.3,
@@ -739,29 +741,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    kLimeAccent.withOpacity(0.3),
-                    kLimeAccent.withOpacity(0.2),
+                    kLimeAccent.withValues(alpha: 0.3),
+                    kLimeAccent.withValues(alpha: 0.2),
                   ],
                 )
               : LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.white.withOpacity(0.1),
-                    Colors.white.withOpacity(0.05),
+                    Colors.white.withValues(alpha: 0.1),
+                    Colors.white.withValues(alpha: 0.05),
                   ],
                 ),
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
             color: selected
-                ? kLimeAccent.withOpacity(0.5)
-                : Colors.white.withOpacity(0.2),
+                ? kLimeAccent.withValues(alpha: 0.5)
+                : Colors.white.withValues(alpha: 0.2),
             width: selected ? 2 : 1.5,
           ),
           boxShadow: selected
               ? [
                   BoxShadow(
-                    color: kLimeAccent.withOpacity(0.2),
+                    color: kLimeAccent.withValues(alpha: 0.2),
                     blurRadius: 8,
                     spreadRadius: 0,
                   ),
@@ -771,7 +773,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Text(
           label,
           style: TextStyle(
-            color: selected ? kLimeAccent : Colors.white.withOpacity(0.8),
+            color: selected ? kLimeAccent : Colors.white.withValues(alpha: 0.8),
             fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
             fontSize: 14,
             letterSpacing: -0.3,

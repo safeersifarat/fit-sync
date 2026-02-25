@@ -60,16 +60,16 @@ class WorkoutThankYouScreen extends StatelessWidget {
                 Text(
                   'Great job completing $title.',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 16,
-                  ),
+                  style: const TextStyle(color: Colors.white70, fontSize: 16),
                 ),
                 const SizedBox(height: 32),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 20,
+                  ),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
+                    color: Colors.white.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(24),
                     border: Border.all(color: Colors.white24),
                   ),
@@ -77,7 +77,10 @@ class WorkoutThankYouScreen extends StatelessWidget {
                     children: [
                       _StatRow(label: 'Reps completed', value: '$repCount'),
                       const Divider(color: Colors.white24, height: 24),
-                      _StatRow(label: 'Duration', value: _formatDuration(duration)),
+                      _StatRow(
+                        label: 'Duration',
+                        value: _formatDuration(duration),
+                      ),
                     ],
                   ),
                 ),
@@ -86,7 +89,7 @@ class WorkoutThankYouScreen extends StatelessWidget {
                   'Keep up the great work!',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                     fontSize: 14,
                   ),
                 ),
@@ -94,7 +97,8 @@ class WorkoutThankYouScreen extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () => Navigator.of(context).popUntil((r) => r.isFirst),
+                    onPressed: () =>
+                        Navigator.of(context).popUntil((r) => r.isFirst),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFCCFF00),
                       foregroundColor: Colors.black,

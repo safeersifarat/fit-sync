@@ -12,7 +12,9 @@ class OnboardingStepWeightScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final ctrl = context.watch<OnboardingController>();
     final isKg = ctrl.useMetricWeight;
-    final displayValue = isKg ? ctrl.weight.round() : (ctrl.weight * 2.205).round();
+    final displayValue = isKg
+        ? ctrl.weight.round()
+        : (ctrl.weight * 2.205).round();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -135,4 +137,3 @@ class _NextButton extends StatelessWidget {
     );
   }
 }
-

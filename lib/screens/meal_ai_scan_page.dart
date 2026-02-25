@@ -73,9 +73,7 @@ class _MealAiScanPageState extends State<MealAiScanPage>
         title: Text('AI Scan - ${widget.title}'),
       ),
       body: controller == null || !controller.value.isInitialized
-          ? const Center(
-              child: CircularProgressIndicator(color: Colors.white),
-            )
+          ? const Center(child: CircularProgressIndicator(color: Colors.white))
           : Stack(
               children: [
                 CameraPreview(controller),
@@ -89,14 +87,11 @@ class _MealAiScanPageState extends State<MealAiScanPage>
                     isProcessing: _isProcessing,
                     onAdd: () {
                       if (_detected == null) return;
-                      final ctrl =
-                          context.read<CalorieTrackerController>();
+                      final ctrl = context.read<CalorieTrackerController>();
                       final date = ctrl.selectedDate;
                       final timeOfDay = TimeOfDay.now();
                       final entry = MealEntry(
-                        id: DateTime.now()
-                            .millisecondsSinceEpoch
-                            .toString(),
+                        id: DateTime.now().millisecondsSinceEpoch.toString(),
                         type: widget.mealType,
                         date: date,
                         timeOfDay: timeOfDay,
@@ -104,8 +99,7 @@ class _MealAiScanPageState extends State<MealAiScanPage>
                         carbs: 0,
                         fats: 0,
                         protein: 0,
-                        estimatedCalories:
-                            _detected!.calories.toDouble(),
+                        estimatedCalories: _detected!.calories.toDouble(),
                       );
                       ctrl.addEntry(entry);
                       Navigator.popUntil(context, (route) => route.isFirst);
@@ -131,9 +125,7 @@ class _ScanningOverlay extends StatelessWidget {
         final top = animation.value * (height * 0.6) + height * 0.2;
         return Stack(
           children: [
-            Container(
-              color: Colors.black.withOpacity(0.25),
-            ),
+            Container(color: Colors.black.withValues(alpha: 0.25)),
             Positioned(
               left: 40,
               right: 40,
@@ -150,10 +142,7 @@ class _ScanningOverlay extends StatelessWidget {
               left: 40,
               right: 40,
               top: top,
-              child: Container(
-                height: 2,
-                color: Colors.white,
-              ),
+              child: Container(height: 2, color: Colors.white),
             ),
           ],
         );
@@ -182,8 +171,8 @@ class _BottomStatus extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Colors.black.withOpacity(0.1),
-            Colors.black.withOpacity(0.9),
+            Colors.black.withValues(alpha: 0.1),
+            Colors.black.withValues(alpha: 0.9),
           ],
         ),
       ),
@@ -194,8 +183,8 @@ class _BottomStatus extends StatelessWidget {
             isProcessing
                 ? 'Scanning...'
                 : detected != null
-                    ? 'Detected: ${detected!.name} - ${detected!.calories} kcal'
-                    : 'Tap Add to log this meal',
+                ? 'Detected: ${detected!.name} - ${detected!.calories} kcal'
+                : 'Tap Add to log this meal',
             style: const TextStyle(color: Colors.white),
           ),
           const SizedBox(height: 12),
@@ -219,4 +208,3 @@ class _BottomStatus extends StatelessWidget {
     );
   }
 }
-

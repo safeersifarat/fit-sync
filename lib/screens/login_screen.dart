@@ -18,10 +18,7 @@ class LoginScreen extends StatelessWidget {
           keyboardType: TextInputType.emailAddress,
         ),
         const SizedBox(height: 16),
-        const AuthTextField(
-          hint: 'Password',
-          obscureText: true,
-        ),
+        const AuthTextField(hint: 'Password', obscureText: true),
         const SizedBox(height: 12),
         Align(
           alignment: Alignment.centerRight,
@@ -29,15 +26,13 @@ class LoginScreen extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => const ForgotPasswordScreen(),
-                ),
+                MaterialPageRoute(builder: (_) => const ForgotPasswordScreen()),
               );
             },
             child: Text(
               'Forgot Password?',
               style: TextStyle(
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withValues(alpha: 0.8),
                 decoration: TextDecoration.underline,
                 fontSize: 13,
                 letterSpacing: -0.2,
@@ -52,9 +47,7 @@ class LoginScreen extends StatelessWidget {
             // After a real login API call succeeds, go to the workout home shell.
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(
-                builder: (_) => const HomeShell(),
-              ),
+              MaterialPageRoute(builder: (_) => const HomeShell()),
             );
           },
         ),
@@ -65,7 +58,7 @@ class LoginScreen extends StatelessWidget {
             Text(
               "Don't have an account? ",
               style: TextStyle(
-                color: Colors.white.withOpacity(0.7),
+                color: Colors.white.withValues(alpha: 0.7),
                 letterSpacing: -0.2,
               ),
             ),
@@ -73,9 +66,7 @@ class LoginScreen extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => const RegisterScreen(),
-                  ),
+                  MaterialPageRoute(builder: (_) => const RegisterScreen()),
                 );
               },
               child: const Text(

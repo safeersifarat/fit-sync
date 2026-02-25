@@ -22,10 +22,13 @@ class OnboardingSplashScreen extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: IconButton(
                     style: IconButton.styleFrom(
-                      backgroundColor: Colors.black.withOpacity(0.35),
+                      backgroundColor: Colors.black.withValues(alpha: 0.35),
                       foregroundColor: Colors.white,
                     ),
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new_rounded,
+                      size: 18,
+                    ),
                     onPressed: () => Navigator.of(context).maybePop(),
                   ),
                 ),
@@ -35,7 +38,7 @@ class OnboardingSplashScreen extends StatelessWidget {
                   height: 260,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(32),
-                    color: Colors.black.withOpacity(0.4),
+                    color: Colors.black.withValues(alpha: 0.4),
                   ),
                   alignment: Alignment.bottomLeft,
                   padding: const EdgeInsets.all(20),
@@ -69,4 +72,3 @@ class OnboardingSplashScreen extends StatelessWidget {
     );
   }
 }
-

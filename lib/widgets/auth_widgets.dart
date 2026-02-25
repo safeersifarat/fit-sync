@@ -40,11 +40,15 @@ class AuthScaffold extends StatelessWidget {
                       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                       child: IconButton(
                         style: IconButton.styleFrom(
-                          backgroundColor: Colors.white.withOpacity(0.1),
+                          backgroundColor: Colors.white.withValues(alpha: 0.1),
                           foregroundColor: Colors.white,
                         ),
-                        icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
-                        onPressed: onBack ?? () => Navigator.of(context).maybePop(),
+                        icon: const Icon(
+                          Icons.arrow_back_ios_new_rounded,
+                          size: 18,
+                        ),
+                        onPressed:
+                            onBack ?? () => Navigator.of(context).maybePop(),
                       ),
                     ),
                   ),
@@ -62,17 +66,17 @@ class AuthScaffold extends StatelessWidget {
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              Colors.white.withOpacity(0.2),
-                              Colors.white.withOpacity(0.1),
+                              Colors.white.withValues(alpha: 0.2),
+                              Colors.white.withValues(alpha: 0.1),
                             ],
                           ),
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.4),
+                            color: Colors.white.withValues(alpha: 0.4),
                             width: 2.5,
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
+                              color: Colors.black.withValues(alpha: 0.2),
                               blurRadius: 20,
                               spreadRadius: 2,
                             ),
@@ -90,27 +94,23 @@ class AuthScaffold extends StatelessWidget {
                 const SizedBox(height: 40),
                 Text(
                   title,
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        letterSpacing: -0.5,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.headlineMedium?.copyWith(letterSpacing: -0.5),
                 ),
                 if (subtitle != null) ...[
                   const SizedBox(height: 8),
                   Text(
                     subtitle!,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          letterSpacing: -0.3,
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(letterSpacing: -0.3),
                   ),
                 ],
                 const SizedBox(height: 32),
                 Expanded(
                   child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        ...children,
-                      ],
-                    ),
+                    child: Column(children: [...children]),
                   ),
                 ),
               ],
@@ -142,7 +142,7 @@ class PrimaryButton extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: kLimeAccent.withOpacity(0.95),
+              backgroundColor: kLimeAccent.withValues(alpha: 0.95),
               foregroundColor: Colors.black87,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
@@ -188,7 +188,7 @@ class SecondaryButton extends StatelessWidget {
             style: OutlinedButton.styleFrom(
               foregroundColor: Colors.white,
               side: BorderSide(
-                color: Colors.white.withOpacity(0.3),
+                color: Colors.white.withValues(alpha: 0.3),
                 width: 1.5,
               ),
               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -243,7 +243,9 @@ class AuthTextField extends StatelessWidget {
           focusNode: focusNode,
           obscureText: obscureText,
           keyboardType: keyboardType,
-          textInputAction: nextFocus != null ? TextInputAction.next : TextInputAction.done,
+          textInputAction: nextFocus != null
+              ? TextInputAction.next
+              : TextInputAction.done,
           onSubmitted: (_) {
             if (nextFocus != null) {
               FocusScope.of(context).requestFocus(nextFocus);
@@ -251,37 +253,34 @@ class AuthTextField extends StatelessWidget {
               onSubmitted?.call();
             }
           },
-          style: const TextStyle(
-            color: Colors.white,
-            letterSpacing: -0.3,
-          ),
+          style: const TextStyle(color: Colors.white, letterSpacing: -0.3),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: TextStyle(
-              color: Colors.white.withOpacity(0.5),
-            ),
+            hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
             filled: true,
-            fillColor: Colors.white.withOpacity(0.1),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            fillColor: Colors.white.withValues(alpha: 0.1),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 16,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 width: 1.5,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 width: 1.5,
               ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide(
-                color: kLimeAccent.withOpacity(0.6),
+                color: kLimeAccent.withValues(alpha: 0.6),
                 width: 2,
               ),
             ),
@@ -291,4 +290,3 @@ class AuthTextField extends StatelessWidget {
     );
   }
 }
-

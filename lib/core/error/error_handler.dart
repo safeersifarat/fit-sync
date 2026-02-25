@@ -32,10 +32,7 @@ class ErrorHandler {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF141623),
-        title: const Text(
-          'Error',
-          style: TextStyle(color: Colors.white),
-        ),
+        title: const Text('Error', style: TextStyle(color: Colors.white)),
         content: Text(
           error.message,
           style: const TextStyle(color: Colors.white70),
@@ -71,7 +68,6 @@ class ErrorHandler {
 
   /// Log error (in production, send to crash reporting service)
   static void logError(dynamic error, {StackTrace? stackTrace}) {
-    // TODO: Integrate with Firebase Crashlytics or similar
     debugPrint('Error: $error');
     if (stackTrace != null) {
       debugPrint('Stack trace: $stackTrace');

@@ -11,7 +11,8 @@ class ThemeController extends ChangeNotifier {
   bool get isDarkMode => _isDarkMode;
   bool get isLoading => _isLoading;
 
-  ThemeData get currentTheme => _isDarkMode ? AppTheme.getDarkTheme() : AppTheme.getLightTheme();
+  ThemeData get currentTheme =>
+      _isDarkMode ? AppTheme.getDarkTheme() : AppTheme.getLightTheme();
 
   /// Initialize and load theme preference
   Future<void> initialize() async {

@@ -40,9 +40,7 @@ class WelcomeScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) => const LoginScreen(),
-                      ),
+                      MaterialPageRoute(builder: (_) => const LoginScreen()),
                     );
                   },
                 ),
@@ -52,16 +50,13 @@ class WelcomeScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) => const RegisterScreen(),
-                      ),
+                      MaterialPageRoute(builder: (_) => const RegisterScreen()),
                     );
                   },
                 ),
                 const SizedBox(height: 24),
                 TextButton(
                   onPressed: () {
-                    // TODO: Continue as guest flow.
                   },
                   child: const Text(
                     'Continue as a guest',
@@ -80,4 +75,3 @@ class WelcomeScreen extends StatelessWidget {
     );
   }
 }
-

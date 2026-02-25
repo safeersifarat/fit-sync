@@ -9,7 +9,6 @@ import '../widgets/auth_background.dart';
 import '../widgets/calorie_line_chart.dart';
 import '../widgets/schedule_timeline.dart';
 import '../widgets/workout_notification.dart';
-import '../core/widgets/glass_container.dart';
 import 'dumbbell_workout_screen.dart';
 
 class WorkoutHomePage extends StatefulWidget {
@@ -33,11 +32,7 @@ class _WorkoutHomePageState extends State<WorkoutHomePage> {
       'details': '25 rep, 3 sets with 20 sec rest',
       'time': '04:00 PM',
     },
-    {
-      'title': 'WarmUp',
-      'details': 'Run 02 km',
-      'time': '02:00 PM',
-    },
+    {'title': 'WarmUp', 'details': 'Run 02 km', 'time': '02:00 PM'},
   ];
 
   @override
@@ -86,7 +81,10 @@ class _WorkoutHomePageState extends State<WorkoutHomePage> {
           AuthBackground(
             child: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 16,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -132,14 +130,8 @@ class _Header extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Hi!,',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            Text(
-              name,
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+            Text('Hi!,', style: Theme.of(context).textTheme.headlineMedium),
+            Text(name, style: Theme.of(context).textTheme.headlineMedium),
           ],
         ),
         ClipRRect(
@@ -153,13 +145,13 @@ class _Header extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.white.withOpacity(0.15),
-                    Colors.white.withOpacity(0.05),
+                    Colors.white.withValues(alpha: 0.15),
+                    Colors.white.withValues(alpha: 0.05),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(50),
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   width: 1.5,
                 ),
               ),
@@ -175,13 +167,13 @@ class _Header extends StatelessWidget {
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            Colors.white.withOpacity(0.2),
-                            Colors.white.withOpacity(0.1),
+                            Colors.white.withValues(alpha: 0.2),
+                            Colors.white.withValues(alpha: 0.1),
                           ],
                         ),
                         borderRadius: BorderRadius.circular(18),
                         border: Border.all(
-                          color: Colors.white.withOpacity(0.3),
+                          color: Colors.white.withValues(alpha: 0.3),
                           width: 1,
                         ),
                       ),
@@ -206,13 +198,13 @@ class _Header extends StatelessWidget {
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                               colors: [
-                                Colors.white.withOpacity(0.2),
-                                Colors.white.withOpacity(0.1),
+                                Colors.white.withValues(alpha: 0.2),
+                                Colors.white.withValues(alpha: 0.1),
                               ],
                             ),
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: Colors.white.withOpacity(0.3),
+                              color: Colors.white.withValues(alpha: 0.3),
                               width: 1,
                             ),
                           ),
@@ -248,11 +240,7 @@ class _ScheduleSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      ScheduleItem(
-        title: 'WarmUp',
-        subtitle: 'Run 02 km',
-        isFirst: true,
-      ),
+      ScheduleItem(title: 'WarmUp', subtitle: 'Run 02 km', isFirst: true),
       ScheduleItem(
         title: 'Muscle Up',
         subtitle: '10 reps, 3 sets with 20 sec rest',
@@ -289,18 +277,25 @@ class _ScheduleSection extends StatelessWidget {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          Colors.white.withOpacity(0.2),
-                          Colors.white.withOpacity(0.1),
+                          Colors.white.withValues(alpha: 0.2),
+                          Colors.white.withValues(alpha: 0.1),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(18),
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.3),
+                        color: Colors.white.withValues(alpha: 0.3),
                         width: 1,
                       ),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                    child: const Icon(Icons.filter_list, color: Colors.white, size: 20),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 8,
+                    ),
+                    child: const Icon(
+                      Icons.filter_list,
+                      color: Colors.white,
+                      size: 20,
+                    ),
                   ),
                 ),
               ),
@@ -309,10 +304,7 @@ class _ScheduleSection extends StatelessWidget {
           const SizedBox(height: 12),
           const Text(
             "Today's Activity",
-            style: TextStyle(
-              color: Colors.white70,
-              fontSize: 13,
-            ),
+            style: TextStyle(color: Colors.white70, fontSize: 13),
           ),
           const SizedBox(height: 12),
           Expanded(
@@ -336,4 +328,3 @@ class _ScheduleSection extends StatelessWidget {
     );
   }
 }
-

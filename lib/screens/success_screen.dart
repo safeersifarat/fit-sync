@@ -22,10 +22,13 @@ class SuccessScreen extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: IconButton(
                     style: IconButton.styleFrom(
-                      backgroundColor: Colors.black.withOpacity(0.35),
+                      backgroundColor: Colors.black.withValues(alpha: 0.35),
                       foregroundColor: Colors.white,
                     ),
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new_rounded,
+                      size: 18,
+                    ),
                     onPressed: () => Navigator.of(context).maybePop(),
                   ),
                 ),
@@ -57,10 +60,7 @@ class SuccessScreen extends StatelessWidget {
                 const Text(
                   'Your password has been changed\nsuccessfully.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 14,
-                  ),
+                  style: TextStyle(color: Colors.white70, fontSize: 14),
                 ),
                 const SizedBox(height: 40),
                 PrimaryButton(
@@ -68,9 +68,7 @@ class SuccessScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) => const LoginScreen(),
-                      ),
+                      MaterialPageRoute(builder: (_) => const LoginScreen()),
                       (route) => false,
                     );
                   },
@@ -84,4 +82,3 @@ class SuccessScreen extends StatelessWidget {
     );
   }
 }
-

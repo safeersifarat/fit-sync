@@ -10,7 +10,8 @@ class ForgotPasswordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return AuthScaffold(
       title: 'Forgot Password?',
-      subtitle: 'Enter your email address and we\'ll send you a\nverification code.',
+      subtitle:
+          'Enter your email address and we\'ll send you a\nverification code.',
       children: [
         const AuthTextField(
           hint: 'Email',
@@ -22,9 +23,7 @@ class ForgotPasswordScreen extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (_) => const OTPVerificationScreen(),
-              ),
+              MaterialPageRoute(builder: (_) => const OTPVerificationScreen()),
             );
           },
         ),
@@ -32,4 +31,3 @@ class ForgotPasswordScreen extends StatelessWidget {
     );
   }
 }
-

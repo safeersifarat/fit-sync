@@ -45,18 +45,18 @@ class GlassContainer extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                glassColor.withOpacity(baseOpacity),
-                glassColor.withOpacity(baseOpacity * 0.3),
+                glassColor.withValues(alpha: baseOpacity),
+                glassColor.withValues(alpha: baseOpacity * 0.3),
               ],
             ),
             borderRadius: borderRadius ?? BorderRadius.circular(24),
             border: Border.all(
-              color: borderColor.withOpacity(isDark ? 0.2 : 0.15),
+              color: borderColor.withValues(alpha: isDark ? 0.2 : 0.15),
               width: borderWidth,
             ),
             boxShadow: [
               BoxShadow(
-                color: shadowColor.withOpacity(isDark ? 0.1 : 0.05),
+                color: shadowColor.withValues(alpha: isDark ? 0.1 : 0.05),
                 blurRadius: 20,
                 offset: const Offset(0, 4),
               ),
@@ -68,10 +68,7 @@ class GlassContainer extends StatelessWidget {
     );
 
     if (onTap != null) {
-      return GestureDetector(
-        onTap: onTap,
-        child: container,
-      );
+      return GestureDetector(onTap: onTap, child: container);
     }
 
     return container;
@@ -96,7 +93,8 @@ class GlassCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GlassContainer(
-      padding: padding ?? const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      padding:
+          padding ?? const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       margin: margin,
       borderRadius: BorderRadius.circular(20),
       blur: 15.0,
@@ -124,7 +122,8 @@ class GlassButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GlassContainer(
-      padding: padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+      padding:
+          padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
       borderRadius: BorderRadius.circular(28),
       blur: 15.0,
       opacity: 0.2,

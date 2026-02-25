@@ -28,112 +28,122 @@ class SettingsPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-              _ProfileHeader(
-                name: ctrl.displayName,
-                height: ctrl.height,
-                weight: ctrl.weight,
-                useMetricHeight: ctrl.useMetricHeight,
-                useMetricWeight: ctrl.useMetricWeight,
-                avatarPath: avatarPath,
-                onEditAvatar: () => _onEditAvatar(context),
-              ),
-              const SizedBox(height: 32),
-              const _SectionTitle('App Settings'),
-              const SizedBox(height: 12),
-              _SettingsCard(
-                children: [
-                  _SettingsRow(
-                    title: 'Account Informations',
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const ProfilePage(),
-                        ),
-                      );
-                    },
-                  ),
-                  Divider(
-                    height: 1,
-                    color: AppTheme.getTextColor(context, opacity: 0.1),
-                  ),
-                  _SettingsRow(
-                    title: 'Notifications',
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const AppSettingsPage(
-                            initialFocus: AppSettingsFocus.notifications,
+                _ProfileHeader(
+                  name: ctrl.displayName,
+                  height: ctrl.height,
+                  weight: ctrl.weight,
+                  useMetricHeight: ctrl.useMetricHeight,
+                  useMetricWeight: ctrl.useMetricWeight,
+                  avatarPath: avatarPath,
+                  onEditAvatar: () => _onEditAvatar(context),
+                ),
+                const SizedBox(height: 32),
+                const _SectionTitle('App Settings'),
+                const SizedBox(height: 12),
+                _SettingsCard(
+                  children: [
+                    _SettingsRow(
+                      title: 'Account Informations',
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => const ProfilePage(),
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                  Divider(
-                    height: 1,
-                    color: AppTheme.getTextColor(context, opacity: 0.1),
-                  ),
-                  _SettingsRow(
-                    title: 'Text Size',
-                    trailingText: 'Medium',
-                    onTap: () {
-                      // Placeholder for text size dialog.
-                      final isDark = Theme.of(context).brightness == Brightness.dark;
-                      showModalBottomSheet(
-                        context: context,
-                        backgroundColor: isDark ? const Color(0xFF101018) : Colors.white,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(24),
-                          ),
-                        ),
-                        builder: (ctx) {
-                          return Padding(
-                            padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Text Size',
-                                  style: Theme.of(ctx)
-                                      .textTheme
-                                      .titleLarge
-                                      ?.copyWith(fontWeight: FontWeight.w700),
-                                ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  'Coming soon. Your text size is currently set to Medium.',
-                                  style: TextStyle(
-                                    color: AppTheme.getTextColor(ctx, opacity: 0.7),
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: TextButton(
-                                    onPressed: () => Navigator.of(ctx).pop(),
-                                    style: TextButton.styleFrom(
-                                      foregroundColor:
-                                          const Color(0xFFCCFF00),
-                                    ),
-                                    child: const Text('Close'),
-                                  ),
-                                ),
-                              ],
+                        );
+                      },
+                    ),
+                    Divider(
+                      height: 1,
+                      color: AppTheme.getTextColor(context, opacity: 0.1),
+                    ),
+                    _SettingsRow(
+                      title: 'Notifications',
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => const AppSettingsPage(
+                              initialFocus: AppSettingsFocus.notifications,
                             ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
-              const _SectionTitle('Support'),
-              const SizedBox(height: 12),
-              const _SupportCard(),
-            ],
+                          ),
+                        );
+                      },
+                    ),
+                    Divider(
+                      height: 1,
+                      color: AppTheme.getTextColor(context, opacity: 0.1),
+                    ),
+                    _SettingsRow(
+                      title: 'Text Size',
+                      trailingText: 'Medium',
+                      onTap: () {
+                        // Placeholder for text size dialog.
+                        final isDark =
+                            Theme.of(context).brightness == Brightness.dark;
+                        showModalBottomSheet(
+                          context: context,
+                          backgroundColor: isDark
+                              ? const Color(0xFF101018)
+                              : Colors.white,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(24),
+                            ),
+                          ),
+                          builder: (ctx) {
+                            return Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                24,
+                                16,
+                                24,
+                                24,
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Text Size',
+                                    style: Theme.of(ctx).textTheme.titleLarge
+                                        ?.copyWith(fontWeight: FontWeight.w700),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    'Coming soon. Your text size is currently set to Medium.',
+                                    style: TextStyle(
+                                      color: AppTheme.getTextColor(
+                                        ctx,
+                                        opacity: 0.7,
+                                      ),
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: TextButton(
+                                      onPressed: () => Navigator.of(ctx).pop(),
+                                      style: TextButton.styleFrom(
+                                        foregroundColor: const Color(
+                                          0xFFCCFF00,
+                                        ),
+                                      ),
+                                      child: const Text('Close'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                const _SectionTitle('Support'),
+                const SizedBox(height: 12),
+                const _SupportCard(),
+              ],
             ),
           ),
         ),
@@ -145,11 +155,9 @@ class SettingsPage extends StatelessWidget {
     // The actual implementation is provided in ProfilePage to keep this
     // widget lightweight. Here we just delegate to the same flow by
     // navigating to the profile editor.
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => const ProfilePage(),
-      ),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const ProfilePage()));
   }
 }
 
@@ -201,12 +209,12 @@ class _ProfileHeader extends StatelessWidget {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          Colors.white.withOpacity(0.2),
-                          Colors.white.withOpacity(0.05),
+                          Colors.white.withValues(alpha: 0.2),
+                          Colors.white.withValues(alpha: 0.05),
                         ],
                       ),
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.3),
+                        color: Colors.white.withValues(alpha: 0.3),
                         width: 2,
                       ),
                     ),
@@ -214,10 +222,7 @@ class _ProfileHeader extends StatelessWidget {
                       padding: const EdgeInsets.all(3),
                       child: ClipOval(
                         child: avatarPath != null
-                            ? Image.file(
-                                File(avatarPath!),
-                                fit: BoxFit.cover,
-                              )
+                            ? Image.file(File(avatarPath!), fit: BoxFit.cover)
                             : Image.asset(
                                 'assets/avatar_placeholder.png',
                                 fit: BoxFit.cover,
@@ -238,18 +243,18 @@ class _ProfileHeader extends StatelessWidget {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        const Color(0xFFCCFF00).withOpacity(0.9),
-                        const Color(0xFFCCFF00).withOpacity(0.7),
+                        const Color(0xFFCCFF00).withValues(alpha: 0.9),
+                        const Color(0xFFCCFF00).withValues(alpha: 0.7),
                       ],
                     ),
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: Colors.white.withOpacity(0.3),
+                      color: Colors.white.withValues(alpha: 0.3),
                       width: 1.5,
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFFCCFF00).withOpacity(0.4),
+                        color: const Color(0xFFCCFF00).withValues(alpha: 0.4),
                         blurRadius: 12,
                         spreadRadius: 1,
                       ),
@@ -269,18 +274,18 @@ class _ProfileHeader extends StatelessWidget {
         Text(
           name,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w700,
-                letterSpacing: -0.5,
-              ),
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.5,
+          ),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 4),
         Text(
           '$heightLabel   •   $weightLabel',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppTheme.getTextColor(context, opacity: 0.7),
-                letterSpacing: -0.3,
-              ),
+            color: AppTheme.getTextColor(context, opacity: 0.7),
+            letterSpacing: -0.3,
+          ),
         ),
       ],
     );
@@ -297,9 +302,9 @@ class _SectionTitle extends StatelessWidget {
     return Text(
       label,
       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-            color: AppTheme.getTextColor(context, opacity: 0.7),
-          ),
+        fontWeight: FontWeight.w600,
+        color: AppTheme.getTextColor(context, opacity: 0.7),
+      ),
     );
   }
 }
@@ -317,19 +322,13 @@ class _SettingsCard extends StatelessWidget {
       blur: 15.0,
       opacity: 0.12,
       borderWidth: 1.0,
-      child: Column(
-        children: children,
-      ),
+      child: Column(children: children),
     );
   }
 }
 
 class _SettingsRow extends StatelessWidget {
-  const _SettingsRow({
-    required this.title,
-    this.trailingText,
-    this.onTap,
-  });
+  const _SettingsRow({required this.title, this.trailingText, this.onTap});
 
   final String title;
   final String? trailingText;
@@ -350,19 +349,19 @@ class _SettingsRow extends StatelessWidget {
                 child: Text(
                   title,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppTheme.getTextColor(context),
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: -0.3,
-                      ),
+                    color: AppTheme.getTextColor(context),
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: -0.3,
+                  ),
                 ),
               ),
               if (trailingText != null) ...[
                 Text(
                   trailingText!,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppTheme.getTextColor(context, opacity: 0.6),
-                        letterSpacing: -0.3,
-                      ),
+                    color: AppTheme.getTextColor(context, opacity: 0.6),
+                    letterSpacing: -0.3,
+                  ),
                 ),
                 const SizedBox(width: 8),
               ],
@@ -386,15 +385,10 @@ class _SupportCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return _SettingsCard(
       children: const [
-        _SettingsRow(
-          title: 'Terms Of Service',
-        ),
+        _SettingsRow(title: 'Terms Of Service'),
         Divider(height: 1, color: Color(0x33FFFFFF)),
-        _SettingsRow(
-          title: 'Privacy Policy',
-        ),
+        _SettingsRow(title: 'Privacy Policy'),
       ],
     );
   }
 }
-

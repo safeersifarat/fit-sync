@@ -109,4 +109,3 @@ class _NextButton extends StatelessWidget {
     );
   }
 }
-

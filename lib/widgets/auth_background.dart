@@ -14,10 +14,6 @@ class AuthBackground extends StatelessWidget {
         ? AppTheme.getDarkBackgroundDecoration()
         : AppTheme.getLightBackgroundDecoration();
 
-    return Container(
-      decoration: decoration,
-      child: child,
-    );
+    return Container(decoration: decoration, child: child);
   }
 }
-

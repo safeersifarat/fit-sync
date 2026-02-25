@@ -36,9 +36,7 @@ class ScheduleTimeline extends StatelessWidget {
       itemBuilder: (context, index) {
         final item = items[index];
         return Padding(
-          padding: EdgeInsets.only(
-            bottom: index < items.length - 1 ? 20 : 0,
-          ),
+          padding: EdgeInsets.only(bottom: index < items.length - 1 ? 20 : 0),
           child: _ScheduleRow(item: item, onStartTap: onStartTap),
         );
       },
@@ -47,10 +45,7 @@ class ScheduleTimeline extends StatelessWidget {
 }
 
 class _ScheduleRow extends StatelessWidget {
-  const _ScheduleRow({
-    required this.item,
-    required this.onStartTap,
-  });
+  const _ScheduleRow({required this.item, required this.onStartTap});
 
   final ScheduleItem item;
   final ScheduleTapCallback onStartTap;
@@ -78,11 +73,7 @@ class _ScheduleRow extends StatelessWidget {
                 ),
               ),
               if (!item.isLast)
-                Expanded(
-                  child: CustomPaint(
-                    painter: _DashedLinePainter(),
-                  ),
-                )
+                Expanded(child: CustomPaint(painter: _DashedLinePainter()))
               else
                 const SizedBox(height: 82),
             ],
@@ -104,18 +95,13 @@ class _ScheduleRow extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   item.subtitle,
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 12,
-                  ),
+                  style: const TextStyle(color: Colors.white70, fontSize: 12),
                 ),
               ],
             ),
           ),
           const SizedBox(width: 12),
-          _StartButton(
-            onTap: () => onStartTap(item),
-          ),
+          _StartButton(onTap: () => onStartTap(item)),
         ],
       ),
     );
@@ -142,18 +128,18 @@ class _StartButton extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  const Color(0xFFFFF59D).withOpacity(0.9),
-                  const Color(0xFFFFF59D).withOpacity(0.7),
+                  const Color(0xFFFFF59D).withValues(alpha: 0.9),
+                  const Color(0xFFFFF59D).withValues(alpha: 0.7),
                 ],
               ),
               borderRadius: BorderRadius.circular(24),
               border: Border.all(
-                color: Colors.white.withOpacity(0.3),
+                color: Colors.white.withValues(alpha: 0.3),
                 width: 1.5,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFFFFF59D).withOpacity(0.3),
+                  color: const Color(0xFFFFF59D).withValues(alpha: 0.3),
                   blurRadius: 12,
                   spreadRadius: 1,
                 ),
@@ -172,11 +158,7 @@ class _StartButton extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 4),
-                Icon(
-                  Icons.play_arrow_rounded,
-                  size: 16,
-                  color: Colors.black87,
-                ),
+                Icon(Icons.play_arrow_rounded, size: 16, color: Colors.black87),
               ],
             ),
           ),
@@ -197,8 +179,11 @@ class _DashedLinePainter extends CustomPainter {
     const dashSpace = 3.0;
     double y = 0;
     while (y < size.height) {
-      canvas.drawLine(Offset(size.width / 2, y),
-          Offset(size.width / 2, y + dashHeight), paint);
+      canvas.drawLine(
+        Offset(size.width / 2, y),
+        Offset(size.width / 2, y + dashHeight),
+        paint,
+      );
       y += dashHeight + dashSpace;
     }
   }
@@ -206,4 +191,3 @@ class _DashedLinePainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
-

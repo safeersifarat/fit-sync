@@ -13,24 +13,16 @@ class CreateNewPasswordScreen extends StatelessWidget {
       subtitle:
           'Your new password must be different from previously used passwords.',
       children: [
-        const AuthTextField(
-          hint: 'New Password',
-          obscureText: true,
-        ),
+        const AuthTextField(hint: 'New Password', obscureText: true),
         const SizedBox(height: 16),
-        const AuthTextField(
-          hint: 'Confirm Password',
-          obscureText: true,
-        ),
+        const AuthTextField(hint: 'Confirm Password', obscureText: true),
         const SizedBox(height: 24),
         PrimaryButton(
           label: 'Reset Password',
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (_) => const SuccessScreen(),
-              ),
+              MaterialPageRoute(builder: (_) => const SuccessScreen()),
             );
           },
         ),
@@ -38,4 +30,3 @@ class CreateNewPasswordScreen extends StatelessWidget {
     );
   }
 }
-

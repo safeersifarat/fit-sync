@@ -20,7 +20,7 @@ class LoadingOverlay extends StatelessWidget {
         child,
         if (isLoading)
           Container(
-            color: Colors.black.withOpacity(0.5),
+            color: Colors.black.withValues(alpha: 0.5),
             child: Center(
               child: Container(
                 padding: const EdgeInsets.all(24),
@@ -58,11 +58,7 @@ class LoadingOverlay extends StatelessWidget {
 
 /// Loading indicator widget
 class LoadingIndicator extends StatelessWidget {
-  const LoadingIndicator({
-    super.key,
-    this.message,
-    this.size = 40.0,
-  });
+  const LoadingIndicator({super.key, this.message, this.size = 40.0});
 
   final String? message;
   final double size;
@@ -77,19 +73,14 @@ class LoadingIndicator extends StatelessWidget {
             width: size,
             height: size,
             child: const CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(
-                Color(0xFFCCFF00),
-              ),
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFCCFF00)),
             ),
           ),
           if (message != null) ...[
             const SizedBox(height: 16),
             Text(
               message!,
-              style: const TextStyle(
-                color: Colors.white70,
-                fontSize: 14,
-              ),
+              style: const TextStyle(color: Colors.white70, fontSize: 14),
             ),
           ],
         ],
@@ -117,7 +108,8 @@ class LoadingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: isLoading ? null : onPressed,
-      style: style ??
+      style:
+          style ??
           ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFFCCFF00),
             foregroundColor: Colors.black,

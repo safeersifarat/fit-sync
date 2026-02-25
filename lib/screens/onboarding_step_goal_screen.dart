@@ -62,7 +62,7 @@ class OnboardingStepGoalScreen extends StatelessWidget {
                   ),
                   onPressed: () {
                     if (ctrl.goal == null) return;
-                    // TODO: send ctrl data to backend here.
+                   
                     Navigator.popUntil(context, (route) => route.isFirst);
                   },
                   child: const Text('Finish'),
@@ -96,15 +96,11 @@ class _GoalCard extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
           color: selected ? Colors.black : Colors.white,
-          border: Border.all(
-            color: selected ? Colors.black : Colors.black26,
-          ),
+          border: Border.all(color: selected ? Colors.black : Colors.black26),
         ),
         child: Text(
           label,
-          style: TextStyle(
-            color: selected ? Colors.white : Colors.black87,
-          ),
+          style: TextStyle(color: selected ? Colors.white : Colors.black87),
         ),
       ),
     );
@@ -136,4 +132,3 @@ class _StepHeader extends StatelessWidget {
     );
   }
 }
-

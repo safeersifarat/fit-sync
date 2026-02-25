@@ -83,10 +83,7 @@ class _YesNoRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
-          child: Text(
-            label,
-            style: const TextStyle(color: Colors.black87),
-          ),
+          child: Text(label, style: const TextStyle(color: Colors.black87)),
         ),
         const SizedBox(width: 16),
         ToggleButtons(
@@ -94,10 +91,7 @@ class _YesNoRow extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           constraints: const BoxConstraints(minWidth: 48, minHeight: 32),
           onPressed: (index) => onChanged(index == 1),
-          children: const [
-            Text('No'),
-            Text('Yes'),
-          ],
+          children: const [Text('No'), Text('Yes')],
         ),
       ],
     );
@@ -154,4 +148,3 @@ class _NextButton extends StatelessWidget {
     );
   }
 }
-

@@ -50,9 +50,7 @@ class OnboardingStepBmiScreen extends StatelessWidget {
               const SizedBox(height: 12),
               Text(
                 'Based on your height and weight.',
-                style: TextStyle(
-                  color: Colors.grey.shade700,
-                ),
+                style: TextStyle(color: Colors.grey.shade700),
               ),
               const Spacer(),
               _NextButton(
@@ -124,4 +122,3 @@ class _NextButton extends StatelessWidget {
     );
   }
 }
-

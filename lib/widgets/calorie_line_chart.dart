@@ -23,15 +23,23 @@ class CalorieLineChart extends StatelessWidget {
                 gridData: FlGridData(show: false),
                 borderData: FlBorderData(show: false),
                 titlesData: FlTitlesData(
-                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  leftTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (value, meta) {
                         final index = value.toInt();
-                        if (index < 0 || index >= days.length) return const SizedBox.shrink();
+                        if (index < 0 || index >= days.length) {
+                          return const SizedBox.shrink();
+                        }
                         final isHighlight = index == 4;
                         return Padding(
                           padding: const EdgeInsets.only(top: 8),
@@ -39,8 +47,12 @@ class CalorieLineChart extends StatelessWidget {
                             days[index],
                             style: TextStyle(
                               fontSize: 11,
-                              color: isHighlight ? Colors.white : Colors.white70,
-                              fontWeight: isHighlight ? FontWeight.bold : FontWeight.normal,
+                              color: isHighlight
+                                  ? Colors.white
+                                  : Colors.white70,
+                              fontWeight: isHighlight
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
                             ),
                           ),
                         );
@@ -59,7 +71,7 @@ class CalorieLineChart extends StatelessWidget {
                     barWidth: 2,
                     dotData: FlDotData(
                       show: true,
-                      getDotPainter: (spot, _, __, ___) {
+                      getDotPainter: (spot, _, _, _) {
                         final isHighlight = spot.x.toInt() == 4;
                         return FlDotCirclePainter(
                           radius: isHighlight ? 5 : 3,
@@ -75,7 +87,7 @@ class CalorieLineChart extends StatelessWidget {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          Colors.white.withOpacity(0.2),
+                          Colors.white.withValues(alpha: 0.2),
                           Colors.transparent,
                         ],
                       ),
@@ -96,10 +108,7 @@ class CalorieLineChart extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Align(
-            alignment: Alignment.topCenter,
-            child: _CalorieTooltip(),
-          ),
+          Align(alignment: Alignment.topCenter, child: _CalorieTooltip()),
         ],
       ),
     );
@@ -155,4 +164,3 @@ class _TooltipTrianglePainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
-

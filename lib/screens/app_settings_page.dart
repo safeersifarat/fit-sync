@@ -40,77 +40,77 @@ class AppSettingsPage extends StatelessWidget {
           child: ListView(
             padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
             children: [
-            _SettingsTile(
-              title: 'Reminder',
-              subtitle: 'Daily workout reminders',
-              trailing: const Icon(
-                Icons.chevron_right_rounded,
-                color: Colors.white70,
-              ),
-              onTap: () {
-                // Placeholder for reminder preferences.
-              },
-            ),
-            const SizedBox(height: 12),
-            _SettingsTile(
-              title: 'Change Password',
-              trailing: const Icon(
-                Icons.chevron_right_rounded,
-                color: Colors.white70,
-              ),
-              onTap: () {
-                // Placeholder for change password flow.
-              },
-            ),
-            const SizedBox(height: 12),
-            _SettingsTile(
-              title: 'Apple Health',
-              trailing: Switch(
-                value: ctrl.appleHealthEnabled,
-                activeColor: Colors.black,
-                activeTrackColor: const Color(0xFFCCFF00),
-                inactiveThumbColor: Colors.white,
-                inactiveTrackColor: Colors.white24,
-                onChanged: (_) => ctrl.toggleAppleHealth(),
-              ),
-            ),
-            const SizedBox(height: 12),
-            _SettingsTile(
-              title: 'Dark Mode',
-              trailing: Switch(
-                value: ctrl.darkModeEnabled,
-                activeColor: Colors.black,
-                activeTrackColor: const Color(0xFFCCFF00),
-                inactiveThumbColor: Colors.white,
-                inactiveTrackColor: Colors.white24,
-                onChanged: (_) async {
-                  await ctrl.toggleDarkMode();
-                  themeController.syncWithOnboarding(ctrl.darkModeEnabled);
+              _SettingsTile(
+                title: 'Reminder',
+                subtitle: 'Daily workout reminders',
+                trailing: const Icon(
+                  Icons.chevron_right_rounded,
+                  color: Colors.white70,
+                ),
+                onTap: () {
+                  // Placeholder for reminder preferences.
                 },
               ),
-            ),
-            const SizedBox(height: 12),
-            _SettingsTile(
-              title: 'Language',
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    _languageLabel(ctrl.languageCode),
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.white70,
-                        ),
-                  ),
-                  const SizedBox(width: 4),
-                  const Icon(
-                    Icons.chevron_right_rounded,
-                    color: Colors.white70,
-                  ),
-                ],
+              const SizedBox(height: 12),
+              _SettingsTile(
+                title: 'Change Password',
+                trailing: const Icon(
+                  Icons.chevron_right_rounded,
+                  color: Colors.white70,
+                ),
+                onTap: () {
+                  // Placeholder for change password flow.
+                },
               ),
-              onTap: () => _showLanguageSheet(context, ctrl),
-            ),
-          ],
+              const SizedBox(height: 12),
+              _SettingsTile(
+                title: 'Apple Health',
+                trailing: Switch(
+                  value: ctrl.appleHealthEnabled,
+                  activeThumbColor: Colors.black,
+                  activeTrackColor: const Color(0xFFCCFF00),
+                  inactiveThumbColor: Colors.white,
+                  inactiveTrackColor: Colors.white24,
+                  onChanged: (_) => ctrl.toggleAppleHealth(),
+                ),
+              ),
+              const SizedBox(height: 12),
+              _SettingsTile(
+                title: 'Dark Mode',
+                trailing: Switch(
+                  value: ctrl.darkModeEnabled,
+                  activeThumbColor: Colors.black,
+                  activeTrackColor: const Color(0xFFCCFF00),
+                  inactiveThumbColor: Colors.white,
+                  inactiveTrackColor: Colors.white24,
+                  onChanged: (_) async {
+                    await ctrl.toggleDarkMode();
+                    themeController.syncWithOnboarding(ctrl.darkModeEnabled);
+                  },
+                ),
+              ),
+              const SizedBox(height: 12),
+              _SettingsTile(
+                title: 'Language',
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      _languageLabel(ctrl.languageCode),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: Colors.white70),
+                    ),
+                    const SizedBox(width: 4),
+                    const Icon(
+                      Icons.chevron_right_rounded,
+                      color: Colors.white70,
+                    ),
+                  ],
+                ),
+                onTap: () => _showLanguageSheet(context, ctrl),
+              ),
+            ],
           ),
         ),
       ),
@@ -129,10 +129,7 @@ class AppSettingsPage extends StatelessWidget {
     }
   }
 
-  void _showLanguageSheet(
-    BuildContext context,
-    OnboardingController ctrl,
-  ) {
+  void _showLanguageSheet(BuildContext context, OnboardingController ctrl) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final backgroundColor = isDark ? const Color(0xFF101018) : Colors.white;
     final textColor = isDark ? Colors.white : const Color(0xFF1A1A1A);
@@ -215,7 +212,9 @@ class _SettingsTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final textColor = isDark ? Colors.white : const Color(0xFF1A1A1A);
-    final subtitleColor = isDark ? Colors.white.withOpacity(0.6) : const Color(0xFF6A6A6A);
+    final subtitleColor = isDark
+        ? Colors.white.withValues(alpha: 0.6)
+        : const Color(0xFF6A6A6A);
 
     return GlassCard(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -229,28 +228,27 @@ class _SettingsTile extends StatelessWidget {
                 Text(
                   title,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: textColor,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: -0.3,
-                      ),
+                    color: textColor,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: -0.3,
+                  ),
                 ),
                 if (subtitle != null) ...[
                   const SizedBox(height: 4),
                   Text(
                     subtitle!,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: subtitleColor,
-                          letterSpacing: -0.2,
-                        ),
+                      color: subtitleColor,
+                      letterSpacing: -0.2,
+                    ),
                   ),
                 ],
               ],
             ),
           ),
-          if (trailing != null) trailing!,
+          ?trailing,
         ],
       ),
     );
   }
 }
-

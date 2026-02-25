@@ -35,9 +35,7 @@ class _HomeShellState extends State<HomeShell> {
                   onSettingsTap: () => setState(() => _currentIndex = 3),
                   onProfileTap: () {
                     Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const ProfilePage(),
-                      ),
+                      MaterialPageRoute(builder: (_) => const ProfilePage()),
                     );
                   },
                 ),
@@ -63,10 +61,7 @@ class _HomeShellState extends State<HomeShell> {
 }
 
 class _BottomNavBar extends StatelessWidget {
-  const _BottomNavBar({
-    required this.currentIndex,
-    required this.onChanged,
-  });
+  const _BottomNavBar({required this.currentIndex, required this.onChanged});
 
   final int currentIndex;
   final ValueChanged<int> onChanged;
@@ -88,51 +83,51 @@ class _BottomNavBar extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.white.withOpacity(0.15),
-                    Colors.white.withOpacity(0.05),
+                    Colors.white.withValues(alpha: 0.15),
+                    Colors.white.withValues(alpha: 0.05),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(28),
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   width: 1.5,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
+                    color: Colors.black.withValues(alpha: 0.2),
                     blurRadius: 20,
                     offset: const Offset(0, -4),
                   ),
                 ],
               ),
               child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _NavItem(
-                icon: Icons.grid_view_rounded,
-                index: 0,
-                currentIndex: currentIndex,
-                onTap: onChanged,
-              ),
-              _NavItem(
-                icon: Icons.restaurant_rounded,
-                index: 1,
-                currentIndex: currentIndex,
-                onTap: onChanged,
-              ),
-              _NavItem(
-                icon: Icons.bar_chart_rounded,
-                index: 2,
-                currentIndex: currentIndex,
-                onTap: onChanged,
-              ),
-              _NavItem(
-                icon: Icons.settings_rounded,
-                index: 3,
-                currentIndex: currentIndex,
-                onTap: onChanged,
-              ),
-            ],
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _NavItem(
+                    icon: Icons.grid_view_rounded,
+                    index: 0,
+                    currentIndex: currentIndex,
+                    onTap: onChanged,
+                  ),
+                  _NavItem(
+                    icon: Icons.restaurant_rounded,
+                    index: 1,
+                    currentIndex: currentIndex,
+                    onTap: onChanged,
+                  ),
+                  _NavItem(
+                    icon: Icons.bar_chart_rounded,
+                    index: 2,
+                    currentIndex: currentIndex,
+                    onTap: onChanged,
+                  ),
+                  _NavItem(
+                    icon: Icons.settings_rounded,
+                    index: 3,
+                    currentIndex: currentIndex,
+                    onTap: onChanged,
+                  ),
+                ],
               ),
             ),
           ),
@@ -170,23 +165,23 @@ class _NavItem extends StatelessWidget {
             end: Alignment.bottomRight,
             colors: isActive
                 ? [
-                    Colors.white.withOpacity(0.95),
-                    Colors.white.withOpacity(0.85),
+                    Colors.white.withValues(alpha: 0.95),
+                    Colors.white.withValues(alpha: 0.85),
                   ]
                 : [
-                    Colors.white.withOpacity(0.15),
-                    Colors.white.withOpacity(0.08),
+                    Colors.white.withValues(alpha: 0.15),
+                    Colors.white.withValues(alpha: 0.08),
                   ],
           ),
           shape: BoxShape.circle,
           border: Border.all(
-            color: Colors.white.withOpacity(isActive ? 0.4 : 0.2),
+            color: Colors.white.withValues(alpha: isActive ? 0.4 : 0.2),
             width: isActive ? 2 : 1.5,
           ),
           boxShadow: isActive
               ? [
                   BoxShadow(
-                    color: Colors.white.withOpacity(0.3),
+                    color: Colors.white.withValues(alpha: 0.3),
                     blurRadius: 12,
                     spreadRadius: 1,
                   ),
@@ -195,11 +190,12 @@ class _NavItem extends StatelessWidget {
         ),
         child: Icon(
           icon,
-          color: isActive ? Colors.black87 : Colors.white.withOpacity(0.7),
+          color: isActive
+              ? Colors.black87
+              : Colors.white.withValues(alpha: 0.7),
           size: 22,
         ),
       ),
     );
   }
 }
-

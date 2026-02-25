@@ -21,8 +21,9 @@ class RulerPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller =
-        FixedExtentScrollController(initialItem: (value - min).clamp(0, max - min));
+    final controller = FixedExtentScrollController(
+      initialItem: (value - min).clamp(0, max - min),
+    );
 
     return Container(
       decoration: BoxDecoration(
@@ -50,8 +51,9 @@ class RulerPicker extends StatelessWidget {
                       '$v',
                       style: TextStyle(
                         fontSize: isSelected ? 32 : 22,
-                        fontWeight:
-                            isSelected ? FontWeight.bold : FontWeight.w500,
+                        fontWeight: isSelected
+                            ? FontWeight.bold
+                            : FontWeight.w500,
                         color: Colors.black87,
                       ),
                     ),
@@ -75,4 +77,3 @@ class RulerPicker extends StatelessWidget {
     );
   }
 }
-

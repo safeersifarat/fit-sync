@@ -79,7 +79,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
       'SEPTEMBER',
       'OCTOBER',
       'NOVEMBER',
-      'DECEMBER'
+      'DECEMBER',
     ];
     return '${months[date.month - 1]} ${date.day.toString().padLeft(2, '0')}, ${date.year}';
   }
@@ -103,17 +103,17 @@ class _Header extends StatelessWidget {
               Text(
                 dateStr,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.white54,
-                      fontSize: 12,
-                    ),
+                  color: Colors.white54,
+                  fontSize: 12,
+                ),
               ),
               const SizedBox(height: 4),
               Text(
                 'Your Statistics',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
             ],
           ),
@@ -129,13 +129,13 @@ class _Header extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    const Color(0xFFFFB3BA).withOpacity(0.25),
-                    const Color(0xFFFFB3BA).withOpacity(0.1),
+                    const Color(0xFFFFB3BA).withValues(alpha: 0.25),
+                    const Color(0xFFFFB3BA).withValues(alpha: 0.1),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   width: 1.5,
                 ),
               ),
@@ -145,10 +145,10 @@ class _Header extends StatelessWidget {
                   Text(
                     'Weekly Average',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.white.withOpacity(0.7),
-                          fontSize: 10,
-                          letterSpacing: -0.2,
-                        ),
+                      color: Colors.white.withValues(alpha: 0.7),
+                      fontSize: 10,
+                      letterSpacing: -0.2,
+                    ),
                   ),
                   const SizedBox(height: 2),
                   Row(
@@ -156,7 +156,8 @@ class _Header extends StatelessWidget {
                     children: [
                       Text(
                         '102 CAL',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                               letterSpacing: -0.5,
@@ -181,10 +182,7 @@ class _Header extends StatelessWidget {
 }
 
 class _TimeToggle extends StatelessWidget {
-  const _TimeToggle({
-    required this.selected,
-    required this.onChanged,
-  });
+  const _TimeToggle({required this.selected, required this.onChanged});
 
   final TimeView selected;
   final ValueChanged<TimeView> onChanged;
@@ -202,13 +200,13 @@ class _TimeToggle extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Colors.white.withOpacity(0.1),
-                Colors.white.withOpacity(0.05),
+                Colors.white.withValues(alpha: 0.1),
+                Colors.white.withValues(alpha: 0.05),
               ],
             ),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: Colors.white.withOpacity(0.15),
+              color: Colors.white.withValues(alpha: 0.15),
               width: 1.5,
             ),
           ),
@@ -266,24 +264,23 @@ class _ToggleButton extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.white.withOpacity(0.2),
-                    Colors.white.withOpacity(0.1),
+                    Colors.white.withValues(alpha: 0.2),
+                    Colors.white.withValues(alpha: 0.1),
                   ],
                 )
               : null,
           borderRadius: BorderRadius.circular(12),
           border: isSelected
-              ? Border.all(
-                  color: Colors.white.withOpacity(0.3),
-                  width: 1,
-                )
+              ? Border.all(color: Colors.white.withValues(alpha: 0.3), width: 1)
               : null,
         ),
         child: Text(
           label,
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: isSelected ? Colors.white : Colors.white.withOpacity(0.7),
+            color: isSelected
+                ? Colors.white
+                : Colors.white.withValues(alpha: 0.7),
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
             fontSize: 14,
             letterSpacing: -0.3,
@@ -317,16 +314,16 @@ class _CaloriesBarChart extends StatelessWidget {
           Text(
             'Calories',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                ),
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
             '${weeklyCalories[currentDayIndex].toInt()} cal',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.white70,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.white70),
           ),
           const SizedBox(height: 20),
           SizedBox(
@@ -343,9 +340,19 @@ class _CaloriesBarChart extends StatelessWidget {
                       showTitles: true,
                       reservedSize: 40,
                       getTitlesWidget: (value, meta) {
-                        const days = ['Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun'];
+                        const days = [
+                          'Mon',
+                          'Tues',
+                          'Wed',
+                          'Thurs',
+                          'Fri',
+                          'Sat',
+                          'Sun',
+                        ];
                         final index = value.toInt();
-                        if (index < 0 || index >= days.length) return const SizedBox.shrink();
+                        if (index < 0 || index >= days.length) {
+                          return const SizedBox.shrink();
+                        }
                         final isCurrentDay = index == currentDayIndex;
                         return Column(
                           mainAxisSize: MainAxisSize.min,
@@ -362,8 +369,12 @@ class _CaloriesBarChart extends StatelessWidget {
                               days[index],
                               style: TextStyle(
                                 fontSize: 10,
-                                color: isCurrentDay ? Colors.white : Colors.white70,
-                                fontWeight: isCurrentDay ? FontWeight.bold : FontWeight.normal,
+                                color: isCurrentDay
+                                    ? Colors.white
+                                    : Colors.white70,
+                                fontWeight: isCurrentDay
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
                               ),
                             ),
                           ],
@@ -371,9 +382,15 @@ class _CaloriesBarChart extends StatelessWidget {
                       },
                     ),
                   ),
-                  leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  leftTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
                 ),
                 gridData: const FlGridData(show: false),
                 borderData: FlBorderData(show: false),
@@ -465,23 +482,23 @@ class _QuickMetricCard extends StatelessWidget {
           Text(
             title,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
           ),
           Text(
             value,
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 8),
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
               value: progress,
-              backgroundColor: Colors.white.withOpacity(0.1),
+              backgroundColor: Colors.white.withValues(alpha: 0.1),
               valueColor: const AlwaysStoppedAnimation<Color>(Colors.white70),
               minHeight: 4,
             ),
@@ -491,7 +508,7 @@ class _QuickMetricCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.15),
+                color: Colors.white.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
@@ -529,9 +546,9 @@ class _MacronutrientRingChart extends StatelessWidget {
           Text(
             'Macronutrients',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                ),
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           const SizedBox(height: 20),
           Row(
@@ -574,7 +591,8 @@ class _MacronutrientRingChart extends StatelessWidget {
     double totalFats = 0;
 
     final today = DateTime.now();
-    final entries = ctrl.mealsForSelectedDate(MealType.breakfast) +
+    final entries =
+        ctrl.mealsForSelectedDate(MealType.breakfast) +
         ctrl.mealsForSelectedDate(MealType.lunch) +
         ctrl.mealsForSelectedDate(MealType.dinner) +
         ctrl.mealsForSelectedDate(MealType.snack);
@@ -626,7 +644,7 @@ class _MacroRing extends StatelessWidget {
           lineWidth: 8,
           percent: percentage,
           progressColor: color,
-          backgroundColor: Colors.white.withOpacity(0.1),
+          backgroundColor: Colors.white.withValues(alpha: 0.1),
           circularStrokeCap: CircularStrokeCap.round,
           center: Text(
             '${(value * 100).toInt()}%',
@@ -640,10 +658,9 @@ class _MacroRing extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           label,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.white70,
-                fontSize: 11,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(color: Colors.white70, fontSize: 11),
         ),
       ],
     );
@@ -671,9 +688,9 @@ class _NetCalorieBalance extends StatelessWidget {
           Text(
             'Net Calorie Balance',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                ),
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           const SizedBox(height: 16),
           Row(
@@ -692,7 +709,9 @@ class _NetCalorieBalance extends StatelessWidget {
               _BalanceItem(
                 label: 'Net',
                 value: '${net.toInt()}',
-                color: net >= 0 ? const Color(0xFF4CAF50) : const Color(0xFFE91E63),
+                color: net >= 0
+                    ? const Color(0xFF4CAF50)
+                    : const Color(0xFFE91E63),
               ),
             ],
           ),
@@ -720,17 +739,16 @@ class _BalanceItem extends StatelessWidget {
         Text(
           value,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: color,
-                fontWeight: FontWeight.bold,
-              ),
+            color: color,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 4),
         Text(
           label,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.white70,
-                fontSize: 11,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(color: Colors.white70, fontSize: 11),
         ),
       ],
     );
@@ -759,15 +777,15 @@ class _WeightTrendChart extends StatelessWidget {
               Text(
                 'Weight & BMI Trend',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               Text(
                 'BMI: ${ctrl.bmi.toStringAsFixed(1)}',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.white70,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: Colors.white70),
               ),
             ],
           ),
@@ -786,7 +804,7 @@ class _WeightTrendChart extends StatelessWidget {
                   horizontalInterval: 2,
                   getDrawingHorizontalLine: (value) {
                     return FlLine(
-                      color: Colors.white.withOpacity(0.1),
+                      color: Colors.white.withValues(alpha: 0.1),
                       strokeWidth: 1,
                     );
                   },
@@ -828,8 +846,12 @@ class _WeightTrendChart extends StatelessWidget {
                       },
                     ),
                   ),
-                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
                 ),
                 borderData: FlBorderData(show: false),
                 lineBarsData: [
@@ -848,7 +870,7 @@ class _WeightTrendChart extends StatelessWidget {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          const Color(0xFFCCFF00).withOpacity(0.3),
+                          const Color(0xFFCCFF00).withValues(alpha: 0.3),
                           Colors.transparent,
                         ],
                       ),
@@ -895,24 +917,26 @@ class _GoalProgressCard extends StatelessWidget {
           Text(
             'Goal Progress',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                ),
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           const SizedBox(height: 16),
           Text(
             ctrl.goal ?? 'No goal set',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.white70,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.white70),
           ),
           const SizedBox(height: 12),
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: LinearProgressIndicator(
               value: progress,
-              backgroundColor: Colors.white.withOpacity(0.1),
-              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFCCFF00)),
+              backgroundColor: Colors.white.withValues(alpha: 0.1),
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                Color(0xFFCCFF00),
+              ),
               minHeight: 12,
             ),
           ),
@@ -923,15 +947,15 @@ class _GoalProgressCard extends StatelessWidget {
               Text(
                 '${(progress * 100).toInt()}%',
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: const Color(0xFFCCFF00),
-                      fontWeight: FontWeight.bold,
-                    ),
+                  color: const Color(0xFFCCFF00),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               Text(
                 'Target: ${_getTargetWeight(ctrl)} kg',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.white54,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: Colors.white54),
               ),
             ],
           ),
@@ -985,13 +1009,13 @@ class _StreakCalendarCard extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                const Color(0xFFFFF9C4).withOpacity(0.4),
-                const Color(0xFFFFF9C4).withOpacity(0.2),
+                const Color(0xFFFFF9C4).withValues(alpha: 0.4),
+                const Color(0xFFFFF9C4).withValues(alpha: 0.2),
               ],
             ),
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
-              color: Colors.white.withOpacity(0.3),
+              color: Colors.white.withValues(alpha: 0.3),
               width: 1.5,
             ),
           ),
@@ -1001,18 +1025,18 @@ class _StreakCalendarCard extends StatelessWidget {
               Text(
                 'strick',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.black87,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: -0.5,
-                    ),
+                  color: Colors.black87,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: -0.5,
+                ),
               ),
               const SizedBox(height: 4),
               Text(
                 '50 cal',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.black.withOpacity(0.7),
-                      letterSpacing: -0.3,
-                    ),
+                  color: Colors.black.withValues(alpha: 0.7),
+                  letterSpacing: -0.3,
+                ),
               ),
               const SizedBox(height: 16),
               _StreakCalendar(),
@@ -1095,9 +1119,9 @@ class _WorkoutMetricsCard extends StatelessWidget {
           Text(
             'Workout Performance',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                ),
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           const SizedBox(height: 20),
           _WorkoutMetricRow(
@@ -1141,17 +1165,17 @@ class _WorkoutMetricRow extends StatelessWidget {
         Expanded(
           child: Text(
             label,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.white70,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.white70),
           ),
         ),
         Text(
           value,
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ],
     );
@@ -1166,10 +1190,9 @@ class _IntensityBreakdown extends StatelessWidget {
       children: [
         Text(
           'Session Intensity',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.white70,
-                fontSize: 12,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: Colors.white70, fontSize: 12),
         ),
         const SizedBox(height: 8),
         Row(
@@ -1222,7 +1245,7 @@ class _IntensityBar extends StatelessWidget {
         Container(
           height: 60,
           decoration: BoxDecoration(
-            color: color.withOpacity(0.3),
+            color: color.withValues(alpha: 0.3),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Align(
@@ -1241,10 +1264,7 @@ class _IntensityBar extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           label,
-          style: const TextStyle(
-            color: Colors.white70,
-            fontSize: 10,
-          ),
+          style: const TextStyle(color: Colors.white70, fontSize: 10),
         ),
         Text(
           '${(percentage * 100).toInt()}%',
@@ -1267,10 +1287,9 @@ class _MuscleGroupRadar extends StatelessWidget {
       children: [
         Text(
           'Muscle Group Focus',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.white70,
-                fontSize: 12,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: Colors.white70, fontSize: 12),
         ),
         const SizedBox(height: 12),
         SizedBox(
@@ -1279,7 +1298,7 @@ class _MuscleGroupRadar extends StatelessWidget {
             RadarChartData(
               dataSets: [
                 RadarDataSet(
-                  fillColor: const Color(0xFFCCFF00).withOpacity(0.3),
+                  fillColor: const Color(0xFFCCFF00).withValues(alpha: 0.3),
                   borderColor: const Color(0xFFCCFF00),
                   borderWidth: 2,
                   dataEntries: const [
@@ -1293,16 +1312,13 @@ class _MuscleGroupRadar extends StatelessWidget {
               ],
               radarTouchData: RadarTouchData(enabled: false),
               radarBorderData: BorderSide(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 width: 1,
               ),
               titlePositionPercentageOffset: 0.2,
               getTitle: (index, angle) {
                 const titles = ['Core', 'Legs', 'Arms', 'Back', 'Shoulders'];
-                return RadarChartTitle(
-                  text: titles[index],
-                  angle: angle,
-                );
+                return RadarChartTitle(text: titles[index], angle: angle);
               },
               titleTextStyle: const TextStyle(
                 color: Colors.white70,
@@ -1314,7 +1330,7 @@ class _MuscleGroupRadar extends StatelessWidget {
                 fontSize: 8,
               ),
               tickBorderData: BorderSide(
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
                 width: 1,
               ),
             ),

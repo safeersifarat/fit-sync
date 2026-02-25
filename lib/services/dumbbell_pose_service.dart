@@ -1,5 +1,4 @@
 import 'dart:math' as math;
-import 'dart:typed_data';
 import 'dart:ui' show Size;
 
 import 'package:camera/camera.dart';
@@ -44,7 +43,10 @@ class DumbbellPoseService {
   late final PoseDetector _detector;
 
   /// Converts CameraImage to InputImage for ML Kit (Android YUV420 → NV21).
-  InputImage? _imageFromCameraImage(CameraImage image, CameraLensDirection lensDirection) {
+  InputImage? _imageFromCameraImage(
+    CameraImage image,
+    CameraLensDirection lensDirection,
+  ) {
     if (image.format.group != ImageFormatGroup.yuv420) {
       return null;
     }
@@ -81,10 +83,7 @@ class DumbbellPoseService {
       bytesPerRow: yRowStride,
     );
 
-    return InputImage.fromBytes(
-      bytes: nv21,
-      metadata: metadata,
-    );
+    return InputImage.fromBytes(bytes: nv21, metadata: metadata);
   }
 
   InputImageRotation _rotationFromLensDirection(CameraLensDirection direction) {
@@ -131,7 +130,9 @@ class DumbbellPoseService {
           rightWrist.x,
           rightWrist.y,
         );
-      } else if (leftElbow != null && leftShoulder != null && leftWrist != null) {
+      } else if (leftElbow != null &&
+          leftShoulder != null &&
+          leftWrist != null) {
         angle = _angle(
           leftShoulder.x,
           leftShoulder.y,
@@ -151,7 +152,9 @@ class DumbbellPoseService {
 
       String? message;
       if (angle < 20) message = 'Extend your arm fully';
-      if (!isGoodPosture && angle > 60 && angle < 120) message = 'Keep elbow stable';
+      if (!isGoodPosture && angle > 60 && angle < 120) {
+        message = 'Keep elbow stable';
+      }
 
       return DumbbellPoseResult(
         elbowAngle: angle,
@@ -165,12 +168,26 @@ class DumbbellPoseService {
     }
   }
 
-  double _angle(double x1, double y1, double x2, double y2, double x3, double y3) {
+  double _angle(
+    double x1,
+    double y1,
+    double x2,
+    double y2,
+    double x3,
+    double y3,
+  ) {
     final rad = _angleRad(x1, y1, x2, y2, x3, y3);
     return rad * 180 / math.pi;
   }
 
-  double _angleRad(double x1, double y1, double x2, double y2, double x3, double y3) {
+  double _angleRad(
+    double x1,
+    double y1,
+    double x2,
+    double y2,
+    double x3,
+    double y3,
+  ) {
     final a = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
     final b = (x3 - x2) * (x3 - x2) + (y3 - y2) * (y3 - y2);
     final c = (x1 - x3) * (x1 - x3) + (y1 - y3) * (y1 - y3);

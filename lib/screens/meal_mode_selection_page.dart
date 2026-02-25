@@ -127,10 +127,7 @@ class _ModeTile extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: const TextStyle(
-                      color: Colors.white70,
-                      fontSize: 13,
-                    ),
+                    style: const TextStyle(color: Colors.white70, fontSize: 13),
                   ),
                 ],
               ),
@@ -142,4 +139,3 @@ class _ModeTile extends StatelessWidget {
     );
   }
 }
-

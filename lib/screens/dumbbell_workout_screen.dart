@@ -148,9 +148,7 @@ class _DumbbellWorkoutScreenState extends State<DumbbellWorkoutScreen> {
     if (!_isInitialized || _camera == null || !_camera!.value.isInitialized) {
       return const ColoredBox(
         color: Colors.black,
-        child: Center(
-          child: CircularProgressIndicator(color: Colors.white),
-        ),
+        child: Center(child: CircularProgressIndicator(color: Colors.white)),
       );
     }
     return CameraPreview(_camera!);
@@ -163,9 +161,9 @@ class _DumbbellWorkoutScreenState extends State<DumbbellWorkoutScreen> {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Colors.black.withOpacity(0.5),
+            Colors.black.withValues(alpha: 0.5),
             Colors.transparent,
-            Colors.black.withOpacity(0.6),
+            Colors.black.withValues(alpha: 0.6),
           ],
         ),
       ),
@@ -189,7 +187,7 @@ class _DumbbellWorkoutScreenState extends State<DumbbellWorkoutScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.5),
+                color: Colors.black.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(24),
               ),
               child: Text(
@@ -220,11 +218,14 @@ class _DumbbellWorkoutScreenState extends State<DumbbellWorkoutScreen> {
           children: [
             if (_postureMessage != null)
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: _isGoodPosture
-                      ? Colors.green.withOpacity(0.8)
-                      : Colors.orange.withOpacity(0.8),
+                      ? Colors.green.withValues(alpha: 0.8)
+                      : Colors.orange.withValues(alpha: 0.8),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
@@ -242,10 +243,16 @@ class _DumbbellWorkoutScreenState extends State<DumbbellWorkoutScreen> {
                 OutlinedButton.icon(
                   onPressed: _manualAddRep,
                   icon: const Icon(Icons.add, color: Colors.white),
-                  label: const Text('Add Rep', style: TextStyle(color: Colors.white)),
+                  label: const Text(
+                    'Add Rep',
+                    style: TextStyle(color: Colors.white),
+                  ),
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: Colors.white),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
                   ),
                 ),
                 ElevatedButton(
@@ -253,7 +260,10 @@ class _DumbbellWorkoutScreenState extends State<DumbbellWorkoutScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFCCFF00),
                     foregroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 16,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),
                     ),
@@ -276,7 +286,7 @@ class _DumbbellWorkoutScreenState extends State<DumbbellWorkoutScreen> {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.red.withOpacity(0.8),
+          color: Colors.red.withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Text(

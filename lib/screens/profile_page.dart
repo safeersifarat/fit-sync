@@ -37,10 +37,12 @@ class _ProfilePageState extends State<ProfilePage> {
     final ctrl = context.read<OnboardingController>();
     _nameController = TextEditingController(text: ctrl.displayName);
     _ageController = TextEditingController(text: ctrl.age.toString());
-    _weightController =
-        TextEditingController(text: ctrl.weight.toStringAsFixed(1));
-    _heightController =
-        TextEditingController(text: ctrl.height.toStringAsFixed(1));
+    _weightController = TextEditingController(
+      text: ctrl.weight.toStringAsFixed(1),
+    );
+    _heightController = TextEditingController(
+      text: ctrl.height.toStringAsFixed(1),
+    );
     _goalController = TextEditingController(text: ctrl.goal ?? '');
   }
 
@@ -130,7 +132,9 @@ class _ProfilePageState extends State<ProfilePage> {
         setState(() => _isPickingImage = false);
         ErrorHandler.showError(
           context,
-          CameraException('Failed to pick image: ${ErrorHandler.getErrorMessage(e)}'),
+          CameraException(
+            'Failed to pick image: ${ErrorHandler.getErrorMessage(e)}',
+          ),
         );
       }
     }
@@ -168,7 +172,9 @@ class _ProfilePageState extends State<ProfilePage> {
       if (mounted) {
         ErrorHandler.showError(
           context,
-          StorageException('Failed to save profile: ${ErrorHandler.getErrorMessage(e)}'),
+          StorageException(
+            'Failed to save profile: ${ErrorHandler.getErrorMessage(e)}',
+          ),
         );
       }
     } finally {
@@ -194,10 +200,7 @@ class _ProfilePageState extends State<ProfilePage> {
           iconTheme: const IconThemeData(color: Colors.white),
           title: const Text(
             'Account Informations',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-            ),
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
           ),
         ),
         body: AuthBackground(
@@ -209,190 +212,208 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                Center(
-                  child: GestureDetector(
-                    onTap: _pickAvatar,
-                    child: Stack(
-                      alignment: Alignment.bottomRight,
-                      children: [
-                        ClipOval(
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                            child: Container(
-                              width: 110,
-                              height: 110,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    Colors.white.withOpacity(0.25),
-                                    Colors.white.withOpacity(0.08),
+                    Center(
+                      child: GestureDetector(
+                        onTap: _pickAvatar,
+                        child: Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            ClipOval(
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(
+                                  sigmaX: 15,
+                                  sigmaY: 15,
+                                ),
+                                child: Container(
+                                  width: 110,
+                                  height: 110,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        Colors.white.withValues(alpha: 0.25),
+                                        Colors.white.withValues(alpha: 0.08),
+                                      ],
+                                    ),
+                                    border: Border.all(
+                                      color: Colors.white.withValues(
+                                        alpha: 0.4,
+                                      ),
+                                      width: 2.5,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withValues(
+                                          alpha: 0.2,
+                                        ),
+                                        blurRadius: 20,
+                                        spreadRadius: 2,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4),
+                                    child: ClipOval(
+                                      child: avatarPath != null
+                                          ? Image.file(
+                                              File(avatarPath),
+                                              fit: BoxFit.cover,
+                                            )
+                                          : Image.asset(
+                                              'assets/avatar_placeholder.png',
+                                              fit: BoxFit.cover,
+                                            ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 4,
+                              right: 4,
+                              child: Container(
+                                width: 32,
+                                height: 32,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      const Color(
+                                        0xFFCCFF00,
+                                      ).withValues(alpha: 0.9),
+                                      const Color(
+                                        0xFFCCFF00,
+                                      ).withValues(alpha: 0.7),
+                                    ],
+                                  ),
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: Colors.white.withValues(alpha: 0.3),
+                                    width: 1.5,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color(
+                                        0xFFCCFF00,
+                                      ).withValues(alpha: 0.4),
+                                      blurRadius: 12,
+                                      spreadRadius: 1,
+                                    ),
                                   ],
                                 ),
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(0.4),
-                                  width: 2.5,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.2),
-                                    blurRadius: 20,
-                                    spreadRadius: 2,
-                                  ),
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(4),
-                                child: ClipOval(
-                                  child: avatarPath != null
-                                      ? Image.file(
-                                          File(avatarPath),
-                                          fit: BoxFit.cover,
-                                        )
-                                      : Image.asset(
-                                          'assets/avatar_placeholder.png',
-                                          fit: BoxFit.cover,
-                                        ),
+                                child: const Icon(
+                                  Icons.camera_alt,
+                                  size: 16,
+                                  color: Colors.black87,
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                        Positioned(
-                          bottom: 4,
-                          right: 4,
-                          child: Container(
-                            width: 32,
-                            height: 32,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  const Color(0xFFCCFF00).withOpacity(0.9),
-                                  const Color(0xFFCCFF00).withOpacity(0.7),
-                                ],
-                              ),
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.white.withOpacity(0.3),
-                                width: 1.5,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color(0xFFCCFF00).withOpacity(0.4),
-                                  blurRadius: 12,
-                                  spreadRadius: 1,
-                                ),
-                              ],
-                            ),
-                            child: const Icon(
-                              Icons.camera_alt,
-                              size: 16,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 32),
-                _Label('Name'),
-                const SizedBox(height: 8),
-                _DarkTextField(
-                  controller: _nameController,
-                  keyboardType: TextInputType.name,
-                  validator: (v) =>
-                      v == null || v.trim().isEmpty ? 'Please enter your name' : null,
-                ),
-                const SizedBox(height: 20),
-                _Label('Age'),
-                const SizedBox(height: 8),
-                _DarkTextField(
-                  controller: _ageController,
-                  keyboardType: TextInputType.number,
-                  validator: (v) {
-                    final value = int.tryParse(v ?? '');
-                    if (value == null || value <= 0) {
-                      return 'Enter a valid age';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                _Label('Weight (kg)'),
-                const SizedBox(height: 8),
-                _DarkTextField(
-                  controller: _weightController,
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  validator: (v) {
-                    final value = double.tryParse(v ?? '');
-                    if (value == null || value <= 0) {
-                      return 'Enter a valid weight';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                _Label('Height (cm)'),
-                const SizedBox(height: 8),
-                _DarkTextField(
-                  controller: _heightController,
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  validator: (v) {
-                    final value = double.tryParse(v ?? '');
-                    if (value == null || value <= 0) {
-                      return 'Enter a valid height';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                _Label('Goal'),
-                const SizedBox(height: 8),
-                _DarkTextField(
-                  controller: _goalController,
-                  keyboardType: TextInputType.text,
-                  hintText: 'e.g. Lose weight, Build muscle',
-                ),
-                const SizedBox(height: 32),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(28),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                    child: LoadingButton(
-                      isLoading: _isSaving,
-                      onPressed: _save,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFCCFF00).withOpacity(0.9),
-                        foregroundColor: Colors.black87,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(28),
-                        ),
-                        elevation: 0,
-                      ),
-                      child: const Text(
-                        'Save',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                          letterSpacing: -0.3,
+                          ],
                         ),
                       ),
                     ),
-                  ),
+                    const SizedBox(height: 32),
+                    _Label('Name'),
+                    const SizedBox(height: 8),
+                    _DarkTextField(
+                      controller: _nameController,
+                      keyboardType: TextInputType.name,
+                      validator: (v) => v == null || v.trim().isEmpty
+                          ? 'Please enter your name'
+                          : null,
+                    ),
+                    const SizedBox(height: 20),
+                    _Label('Age'),
+                    const SizedBox(height: 8),
+                    _DarkTextField(
+                      controller: _ageController,
+                      keyboardType: TextInputType.number,
+                      validator: (v) {
+                        final value = int.tryParse(v ?? '');
+                        if (value == null || value <= 0) {
+                          return 'Enter a valid age';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    _Label('Weight (kg)'),
+                    const SizedBox(height: 8),
+                    _DarkTextField(
+                      controller: _weightController,
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      validator: (v) {
+                        final value = double.tryParse(v ?? '');
+                        if (value == null || value <= 0) {
+                          return 'Enter a valid weight';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    _Label('Height (cm)'),
+                    const SizedBox(height: 8),
+                    _DarkTextField(
+                      controller: _heightController,
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      validator: (v) {
+                        final value = double.tryParse(v ?? '');
+                        if (value == null || value <= 0) {
+                          return 'Enter a valid height';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    _Label('Goal'),
+                    const SizedBox(height: 8),
+                    _DarkTextField(
+                      controller: _goalController,
+                      keyboardType: TextInputType.text,
+                      hintText: 'e.g. Lose weight, Build muscle',
+                    ),
+                    const SizedBox(height: 32),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(28),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                        child: LoadingButton(
+                          isLoading: _isSaving,
+                          onPressed: _save,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(
+                              0xFFCCFF00,
+                            ).withValues(alpha: 0.9),
+                            foregroundColor: Colors.black87,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(28),
+                            ),
+                            elevation: 0,
+                          ),
+                          child: const Text(
+                            'Save',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              letterSpacing: -0.3,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
         ),
       ),
     );
@@ -409,9 +430,9 @@ class _Label extends StatelessWidget {
     return Text(
       text,
       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: Colors.white70,
-            fontWeight: FontWeight.w500,
-          ),
+        color: Colors.white70,
+        fontWeight: FontWeight.w500,
+      ),
     );
   }
 }
@@ -439,35 +460,30 @@ class _DarkTextField extends StatelessWidget {
           controller: controller,
           keyboardType: keyboardType,
           validator: validator,
-          style: const TextStyle(
-            color: Colors.white,
-            letterSpacing: -0.3,
-          ),
+          style: const TextStyle(color: Colors.white, letterSpacing: -0.3),
           decoration: InputDecoration(
             hintText: hintText,
-            hintStyle: TextStyle(
-              color: Colors.white.withOpacity(0.5),
-            ),
+            hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
             filled: true,
-            fillColor: Colors.white.withOpacity(0.1),
+            fillColor: Colors.white.withValues(alpha: 0.1),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 width: 1.5,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 width: 1.5,
               ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide(
-                color: const Color(0xFFCCFF00).withOpacity(0.6),
+                color: const Color(0xFFCCFF00).withValues(alpha: 0.6),
                 width: 2,
               ),
             ),
@@ -481,4 +497,3 @@ class _DarkTextField extends StatelessWidget {
     );
   }
 }
-

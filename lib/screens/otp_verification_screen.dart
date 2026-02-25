@@ -29,8 +29,10 @@ class OTPVerificationScreen extends StatelessWidget {
                 ),
                 decoration: InputDecoration(
                   counterText: '',
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 16, horizontal: 0),
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 16,
+                    horizontal: 0,
+                  ),
                 ),
               ),
             ),
@@ -51,7 +53,6 @@ class OTPVerificationScreen extends StatelessWidget {
         const SizedBox(height: 16),
         TextButton(
           onPressed: () {
-            // TODO: Resend code.
           },
           child: const Text(
             'Didn\'t receive code? Resend',
@@ -65,4 +66,3 @@ class OTPVerificationScreen extends StatelessWidget {
     );
   }
 }
-

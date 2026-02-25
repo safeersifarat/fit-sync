@@ -98,8 +98,7 @@ class _MealManualEntryPageState extends State<MealManualEntryPage> {
                   ),
                 ),
                 onPressed: () {
-                  final ctrl =
-                      context.read<CalorieTrackerController>();
+                  final ctrl = context.read<CalorieTrackerController>();
                   final date = ctrl.selectedDate;
                   final timeOfDay = TimeOfDay.now();
                   final entry = MealEntry(
@@ -153,10 +152,7 @@ class _MacroSlider extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              label,
-              style: const TextStyle(color: Colors.white70),
-            ),
+            Text(label, style: const TextStyle(color: Colors.white70)),
             Text(
               '${value.toInt()} g',
               style: const TextStyle(color: Colors.white),
@@ -169,15 +165,9 @@ class _MacroSlider extends StatelessWidget {
             thumbColor: color,
             inactiveTrackColor: Colors.white24,
           ),
-          child: Slider(
-            min: 0,
-            max: 100,
-            value: value,
-            onChanged: onChanged,
-          ),
+          child: Slider(min: 0, max: 100, value: value, onChanged: onChanged),
         ),
       ],
     );
   }
 }
-

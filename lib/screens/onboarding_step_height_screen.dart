@@ -12,7 +12,9 @@ class OnboardingStepHeightScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final ctrl = context.watch<OnboardingController>();
     final isCm = ctrl.useMetricHeight;
-    final displayValue = isCm ? ctrl.height.round() : (ctrl.height / 2.54).round();
+    final displayValue = isCm
+        ? ctrl.height.round()
+        : (ctrl.height / 2.54).round();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -135,4 +137,3 @@ class _NextButton extends StatelessWidget {
     );
   }
 }
-

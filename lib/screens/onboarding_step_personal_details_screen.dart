@@ -98,15 +98,11 @@ class _ChoiceCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: selected ? Colors.black : Colors.white,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: selected ? Colors.black : Colors.black26,
-          ),
+          border: Border.all(color: selected ? Colors.black : Colors.black26),
         ),
         child: Text(
           label,
-          style: TextStyle(
-            color: selected ? Colors.white : Colors.black87,
-          ),
+          style: TextStyle(color: selected ? Colors.white : Colors.black87),
         ),
       ),
     );
@@ -163,4 +159,3 @@ class _NextButton extends StatelessWidget {
     );
   }
 }
-
