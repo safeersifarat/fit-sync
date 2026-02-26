@@ -26,6 +26,12 @@ class StorageService {
     String? avatarPath,
     bool? useMetricWeight,
     bool? useMetricHeight,
+    String? phoneNumber,
+    bool? hasBackPain,
+    bool? hasKneePain,
+    int? planDuration,
+    bool? dumbbellOption,
+    String? levelOfPhysique,
   }) async {
     if (displayName != null) {
       await _prefs!.setString('user_display_name', displayName);
@@ -54,6 +60,24 @@ class StorageService {
     if (useMetricHeight != null) {
       await _prefs!.setBool('user_use_metric_height', useMetricHeight);
     }
+    if (phoneNumber != null) {
+      await _prefs!.setString('user_phone_number', phoneNumber);
+    }
+    if (hasBackPain != null) {
+      await _prefs!.setBool('user_has_back_pain', hasBackPain);
+    }
+    if (hasKneePain != null) {
+      await _prefs!.setBool('user_has_knee_pain', hasKneePain);
+    }
+    if (planDuration != null) {
+      await _prefs!.setInt('user_plan_duration', planDuration);
+    }
+    if (dumbbellOption != null) {
+      await _prefs!.setBool('user_dumbbell_option', dumbbellOption);
+    }
+    if (levelOfPhysique != null) {
+      await _prefs!.setString('user_level_of_physique', levelOfPhysique);
+    }
   }
 
   String? getDisplayName() => _prefs!.getString('user_display_name');
@@ -65,6 +89,12 @@ class StorageService {
   String? getAvatarPath() => _prefs!.getString('user_avatar_path');
   bool? getUseMetricWeight() => _prefs!.getBool('user_use_metric_weight');
   bool? getUseMetricHeight() => _prefs!.getBool('user_use_metric_height');
+  String? getPhoneNumber() => _prefs!.getString('user_phone_number');
+  bool? getHasBackPain() => _prefs!.getBool('user_has_back_pain');
+  bool? getHasKneePain() => _prefs!.getBool('user_has_knee_pain');
+  int? getPlanDuration() => _prefs!.getInt('user_plan_duration');
+  bool? getDumbbellOption() => _prefs!.getBool('user_dumbbell_option');
+  String? getLevelOfPhysique() => _prefs!.getString('user_level_of_physique');
 
   // App Settings
   Future<void> saveAppSettings({
@@ -134,5 +164,11 @@ class StorageService {
     await _prefs!.remove('user_goal');
     await _prefs!.remove('user_avatar_path');
     await _prefs!.remove('weight_history');
+    await _prefs!.remove('user_phone_number');
+    await _prefs!.remove('user_has_back_pain');
+    await _prefs!.remove('user_has_knee_pain');
+    await _prefs!.remove('user_plan_duration');
+    await _prefs!.remove('user_dumbbell_option');
+    await _prefs!.remove('user_level_of_physique');
   }
 }

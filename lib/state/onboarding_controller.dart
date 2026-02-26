@@ -13,6 +13,7 @@ class OnboardingController extends ChangeNotifier {
   // Auth
   String? email;
   String? password;
+  String? phoneNumber;
   String displayName = 'Youssef';
 
   // Profile
@@ -40,8 +41,9 @@ class OnboardingController extends ChangeNotifier {
   bool hasHeartIssue = false;
 
   String? goal; // e.g. 'Lose weight', 'Build muscle'
-
-  // App-level settings
+  int? planDuration; // 3 or 6 (months)
+  bool? dumbbellOption;
+  String? levelOfPhysique; // easy, medium, hard
   bool appleHealthEnabled = true;
   bool darkModeEnabled = false;
   String languageCode = 'en'; // e.g. 'en', 'es'
@@ -80,6 +82,12 @@ class OnboardingController extends ChangeNotifier {
     avatarPath = _storage!.getAvatarPath();
     useMetricWeight = _storage!.getUseMetricWeight() ?? useMetricWeight;
     useMetricHeight = _storage!.getUseMetricHeight() ?? useMetricHeight;
+    phoneNumber = _storage!.getPhoneNumber() ?? phoneNumber;
+    hasBackPain = _storage!.getHasBackPain() ?? hasBackPain;
+    hasKneePain = _storage!.getHasKneePain() ?? hasKneePain;
+    planDuration = _storage!.getPlanDuration() ?? planDuration;
+    dumbbellOption = _storage!.getDumbbellOption() ?? dumbbellOption;
+    levelOfPhysique = _storage!.getLevelOfPhysique() ?? levelOfPhysique;
     appleHealthEnabled =
         _storage!.getAppleHealthEnabled() ?? appleHealthEnabled;
     darkModeEnabled = _storage!.getDarkModeEnabled() ?? darkModeEnabled;
@@ -101,6 +109,12 @@ class OnboardingController extends ChangeNotifier {
         avatarPath: avatarPath,
         useMetricWeight: useMetricWeight,
         useMetricHeight: useMetricHeight,
+        phoneNumber: phoneNumber,
+        hasBackPain: hasBackPain,
+        hasKneePain: hasKneePain,
+        planDuration: planDuration,
+        dumbbellOption: dumbbellOption,
+        levelOfPhysique: levelOfPhysique,
       );
       await _storage!.saveAppSettings(
         appleHealthEnabled: appleHealthEnabled,
@@ -175,10 +189,35 @@ class OnboardingController extends ChangeNotifier {
     hasKneePain = kneePain ?? hasKneePain;
     hasHeartIssue = heartIssue ?? hasHeartIssue;
     notifyListeners();
+    _saveToStorage();
   }
 
   Future<void> setGoal(String value) async {
     goal = value;
+    notifyListeners();
+    await _saveToStorage();
+  }
+
+  Future<void> setPhoneNumber(String value) async {
+    phoneNumber = value;
+    notifyListeners();
+    await _saveToStorage();
+  }
+
+  Future<void> setPlanDuration(int value) async {
+    planDuration = value;
+    notifyListeners();
+    await _saveToStorage();
+  }
+
+  Future<void> setDumbbellOption(bool value) async {
+    dumbbellOption = value;
+    notifyListeners();
+    await _saveToStorage();
+  }
+
+  Future<void> setLevelOfPhysique(String value) async {
+    levelOfPhysique = value;
     notifyListeners();
     await _saveToStorage();
   }

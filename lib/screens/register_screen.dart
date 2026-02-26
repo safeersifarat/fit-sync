@@ -1,7 +1,12 @@
 // register_screen.dart
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'dart:ui';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+
+import '../widgets/auth_widgets.dart';
+import 'login_screen.dart';
+import 'register_details_screen.dart';
 import '../state/onboarding_controller.dart';
 import '../widgets/auth_widgets.dart';
 import 'login_screen.dart';
@@ -21,11 +26,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _passwordController = TextEditingController();
   final _confirmController = TextEditingController();
   final _nameController = TextEditingController();
+  final _phoneController = TextEditingController();
 
   final _emailFocus = FocusNode();
   final _passwordFocus = FocusNode();
   final _confirmFocus = FocusNode();
   final _nameFocus = FocusNode();
+  final _phoneFocus = FocusNode();
 
   String? _error;
   int _age = 25;
@@ -34,14 +41,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _useMetricWeight = true;
   bool _useMetricHeight = true;
   String? _gender;
-  String? _goal;
+  String? _avatarPath;
 
-  final List<String> _goals = [
-    'Lose weight',
-    'Build muscle',
-    'Improve endurance',
-    'Stay healthy',
-  ];
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _avatarPath = pickedFile.path;
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -49,14 +59,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _passwordController.dispose();
     _confirmController.dispose();
     _nameController.dispose();
+    _phoneController.dispose();
     _emailFocus.dispose();
     _passwordFocus.dispose();
     _confirmFocus.dispose();
     _nameFocus.dispose();
+    _phoneFocus.dispose();
     super.dispose();
   }
 
-  Future<void> _onRegister() async {
+  Future<void> _onNext() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -65,7 +77,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final password = _passwordController.text;
     final confirm = _confirmController.text;
     final name = _nameController.text.trim();
+    final phone = _phoneController.text.trim();
 
+    if (name.isEmpty) {
+      setState(() => _error = 'Please enter your name.');
+      return;
+    }
+    if (phone.isEmpty) {
+      setState(() => _error = 'Please enter your phone number.');
+      return;
+    }
     if (email.isEmpty || !email.contains('@')) {
       setState(() => _error = 'Please enter a valid email.');
       return;
@@ -78,16 +99,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       setState(() => _error = 'Passwords do not match.');
       return;
     }
-    if (name.isEmpty) {
-      setState(() => _error = 'Please enter your name.');
-      return;
-    }
+
     if (_gender == null) {
       setState(() => _error = 'Please select your gender.');
-      return;
-    }
-    if (_goal == null) {
-      setState(() => _error = 'Please select your fitness goal.');
       return;
     }
 
@@ -114,7 +128,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (!mounted) return;
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const OnboardingSplashScreen()),
+      MaterialPageRoute(
+        builder: (_) => RegisterDetailsScreen(
+          name: name,
+          email: email,
+          phone: phone,
+          password: password,
+          age: _age,
+          weight: _weight,
+          height: _height,
+          useMetricWeight: _useMetricWeight,
+          useMetricHeight: _useMetricHeight,
+          gender: _gender!,
+          avatarPath: _avatarPath,
+        ),
+      ),
     );
   }
 
@@ -128,6 +156,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Avatar Picker
+              Center(
+                child: GestureDetector(
+                  onTap: _pickImage,
+                  child: CircleAvatar(
+                    radius: 40,
+                    backgroundColor: Colors.white.withValues(alpha: 0.1),
+                    backgroundImage: _avatarPath != null
+                        ? FileImage(File(_avatarPath!))
+                        : null,
+                    child: _avatarPath == null
+                        ? const Icon(Icons.add_a_photo, color: Colors.white)
+                        : null,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+
               // Name Field
               _buildSectionTitle('Full Name'),
               const SizedBox(height: 8),
@@ -135,6 +181,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 hint: 'Enter your name',
                 controller: _nameController,
                 focusNode: _nameFocus,
+                nextFocus: _emailFocus,
+              ),
+              // Phone Field
+              _buildSectionTitle('Phone Number'),
+              const SizedBox(height: 8),
+              AuthTextField(
+                hint: 'Phone Number',
+                keyboardType: TextInputType.phone,
+                controller: _phoneController,
+                focusNode: _phoneFocus,
                 nextFocus: _emailFocus,
               ),
               const SizedBox(height: 20),
@@ -194,12 +250,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               _buildGenderSelector(),
               const SizedBox(height: 24),
 
-              // Goal Selection
-              _buildSectionTitle('Fitness Goal'),
-              const SizedBox(height: 12),
-              _buildGoalSelector(),
-              const SizedBox(height: 24),
-
               // Error Message
               if (_error != null) ...[
                 ClipRRect(
@@ -240,8 +290,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: 16),
               ],
 
-              // Register Button
-              PrimaryButton(label: 'Create Account', onPressed: _onRegister),
+              // Next Button
+              PrimaryButton(label: 'Next', onPressed: _onNext),
               const SizedBox(height: 16),
 
               // Login Link
@@ -678,8 +728,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    kLimeAccent.withValues(alpha: 0.3),
-                    kLimeAccent.withValues(alpha: 0.2),
+                    const Color(
+                      0xFFC6FF00,
+                    ).withValues(alpha: 0.3), // kLimeAccent
+                    const Color(0xFFC6FF00).withValues(alpha: 0.2),
                   ],
                 )
               : LinearGradient(
@@ -693,14 +745,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: selected
-                ? kLimeAccent.withValues(alpha: 0.5)
+                ? const Color(0xFFC6FF00).withValues(alpha: 0.5)
                 : Colors.white.withValues(alpha: 0.2),
             width: selected ? 2 : 1.5,
           ),
           boxShadow: selected
               ? [
                   BoxShadow(
-                    color: kLimeAccent.withValues(alpha: 0.2),
+                    color: const Color(0xFFC6FF00).withValues(alpha: 0.2),
                     blurRadius: 8,
                     spreadRadius: 0,
                   ),
@@ -710,79 +762,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Text(
           label,
           style: TextStyle(
-            color: selected ? kLimeAccent : Colors.white.withValues(alpha: 0.8),
-            fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-            fontSize: 14,
-            letterSpacing: -0.3,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildGoalSelector() {
-    return Wrap(
-      spacing: 12,
-      runSpacing: 12,
-      children: _goals.map((goal) {
-        return _buildGoalCard(
-          label: goal,
-          selected: _goal == goal,
-          onTap: () => setState(() => _goal = goal),
-        );
-      }).toList(),
-    );
-  }
-
-  Widget _buildGoalCard({
-    required String label,
-    required bool selected,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-        decoration: BoxDecoration(
-          gradient: selected
-              ? LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    kLimeAccent.withValues(alpha: 0.3),
-                    kLimeAccent.withValues(alpha: 0.2),
-                  ],
-                )
-              : LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Colors.white.withValues(alpha: 0.1),
-                    Colors.white.withValues(alpha: 0.05),
-                  ],
-                ),
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(
             color: selected
-                ? kLimeAccent.withValues(alpha: 0.5)
-                : Colors.white.withValues(alpha: 0.2),
-            width: selected ? 2 : 1.5,
-          ),
-          boxShadow: selected
-              ? [
-                  BoxShadow(
-                    color: kLimeAccent.withValues(alpha: 0.2),
-                    blurRadius: 8,
-                    spreadRadius: 0,
-                  ),
-                ]
-              : null,
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: selected ? kLimeAccent : Colors.white.withValues(alpha: 0.8),
+                ? const Color(0xFFC6FF00)
+                : Colors.white.withValues(alpha: 0.8),
             fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
             fontSize: 14,
             letterSpacing: -0.3,
