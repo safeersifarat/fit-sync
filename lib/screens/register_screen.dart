@@ -6,6 +6,7 @@ import '../state/onboarding_controller.dart';
 import '../widgets/auth_widgets.dart';
 import 'login_screen.dart';
 import 'onboarding_splash_screen.dart';
+import '../state/auth_controller.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -92,7 +93,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     setState(() => _error = null);
     final ctrl = context.read<OnboardingController>();
-    ctrl.setAuth(email, password);
+    final auth = context.read<AuthController>();
+    await auth.register(email, password, name);
+
+    if (auth.isAuthenticated) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const OnboardingSplashScreen()),
+      );
+    }
     await ctrl.setDisplayName(name);
     await ctrl.setAge(_age);
     await ctrl.setWeight(_weight);

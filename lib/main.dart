@@ -1,7 +1,7 @@
 //main.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'state/auth_controller.dart';
 import 'screens/welcome_screen.dart';
 import 'state/calorie_tracker_controller.dart';
 import 'state/onboarding_controller.dart';
@@ -26,6 +26,7 @@ class FitSyncApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => CalorieTrackerController()..initialize(),
         ),
+        ChangeNotifierProvider(create: (_) => AuthController()..initialize()),
       ],
       child: Consumer2<ThemeController, OnboardingController>(
         builder: (context, themeController, onboardingController, _) {
