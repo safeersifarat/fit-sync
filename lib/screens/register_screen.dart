@@ -8,10 +8,9 @@ import '../widgets/auth_widgets.dart';
 import 'login_screen.dart';
 import 'register_details_screen.dart';
 import '../state/onboarding_controller.dart';
-import '../widgets/auth_widgets.dart';
-import 'login_screen.dart';
-import 'onboarding_splash_screen.dart';
 import '../state/auth_controller.dart';
+import 'package:provider/provider.dart';
+import 'home_shell.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -42,6 +41,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _useMetricHeight = true;
   String? _gender;
   String? _avatarPath;
+  String? _goal;
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
@@ -113,7 +113,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (auth.isAuthenticated) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const OnboardingSplashScreen()),
+        MaterialPageRoute(builder: (_) => const HomeShell()),
       );
     }
     await ctrl.setDisplayName(name);

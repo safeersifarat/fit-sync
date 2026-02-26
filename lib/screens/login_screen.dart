@@ -5,6 +5,7 @@ import 'register_screen.dart';
 import 'home_shell.dart';
 import '../state/auth_controller.dart';
 import 'package:provider/provider.dart';
+import 'forget_password.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
