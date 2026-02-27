@@ -10,6 +10,7 @@ import '../widgets/calorie_line_chart.dart';
 import '../widgets/schedule_timeline.dart';
 import '../widgets/workout_notification.dart';
 import 'dumbbell_workout_screen.dart';
+import 'squat_workout_screen.dart';
 
 class WorkoutHomePage extends StatefulWidget {
   const WorkoutHomePage({
@@ -311,15 +312,122 @@ class _ScheduleSection extends StatelessWidget {
             child: ScheduleTimeline(
               items: items,
               onStartTap: (item) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => DumbbellWorkoutScreen(
-                      title: item.title,
-                      targetReps: item.title == 'Muscle Up' ? 10 : null,
+                if (item.title == 'Muscle Up' ||
+                    item.title == 'Squat AI Tracking') {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        backgroundColor: const Color(0xFF1E1E1E),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          side: BorderSide(
+                            color: Colors.white.withValues(alpha: 0.1),
+                          ),
+                        ),
+                        title: Row(
+                          children: [
+                            const Icon(
+                              Icons.info_outline,
+                              color: Color(0xFFC6FF00),
+                            ),
+                            const SizedBox(width: 8),
+                            const Text(
+                              'How to Squat',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Camera Placement:',
+                              style: TextStyle(
+                                color: Color(0xFFC6FF00),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            const Text(
+                              '• Prop your phone on the floor or a low table.\n• Stand back far enough so your full body (head to toes) is visible.\n• Best if you face the camera with your body turned sideways (profile view).',
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 13,
+                                height: 1.5,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            const Text(
+                              'The Exercise:',
+                              style: TextStyle(
+                                color: Color(0xFFC6FF00),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            const Text(
+                              '• Keep your chest up.\n• Lower your hips until thighs are parallel to the floor.\n• Push back up to a standing position.\n• The AI lines will turn green when your depth is good!',
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 13,
+                                height: 1.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: const Text(
+                              'Cancel',
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFC6FF00),
+                              foregroundColor: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => SquatWorkoutScreen(
+                                    title: item.title,
+                                    targetReps: 10,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: const Text(
+                              'Start AI Tracking',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => DumbbellWorkoutScreen(
+                        title: item.title,
+                        targetReps: item.title == 'Squat' ? 10 : null,
+                      ),
                     ),
-                  ),
-                );
+                  );
+                }
               },
             ),
           ),

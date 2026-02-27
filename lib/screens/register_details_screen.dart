@@ -84,6 +84,19 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
     setState(() => _error = null);
 
     final ctrl = context.read<OnboardingController>();
+
+    // By-passing actual auth to directly navigate to HomeShell
+    // final auth = context.read<AuthController>();
+    // await auth.register(widget.email, widget.password, widget.name);
+    //
+    // if (!auth.isAuthenticated) {
+    //   if (!mounted) return;
+    //   setState(
+    //     () => _error = auth.error ?? 'Registration failed. Please try again.',
+    //   );
+    //   return;
+    // }
+
     ctrl.setAuth(widget.email, widget.password);
     await ctrl.setDisplayName(widget.name);
     await ctrl.setPhoneNumber(widget.phone);

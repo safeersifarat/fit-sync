@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import '../widgets/auth_widgets.dart';
 import 'register_screen.dart';
 import 'home_shell.dart';
-import '../state/auth_controller.dart';
-import 'package:provider/provider.dart';
 import 'forget_password.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -65,23 +63,11 @@ class _LoginScreenState extends State<LoginScreen> {
         const SizedBox(height: 8),
         PrimaryButton(
           label: 'Login',
-          onPressed: () async {
-            final email = _emailController.text.trim();
-            final password = _passwordController.text;
-
-            final auth = context.read<AuthController>();
-
-            await auth.login(email, password);
-
-            if (!mounted) return;
-
-            final navigator = Navigator.of(context);
-
-            if (auth.isAuthenticated) {
-              navigator.pushReplacement(
-                MaterialPageRoute(builder: (_) => const HomeShell()),
-              );
-            }
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const HomeShell()),
+            );
           },
         ),
         const SizedBox(height: 16),
