@@ -171,4 +171,16 @@ class StorageService {
     await _prefs!.remove('user_dumbbell_option');
     await _prefs!.remove('user_level_of_physique');
   }
+
+  Future<void> saveAuthToken(String token) async {
+    await _prefs!.setString('auth_token', token);
+  }
+
+  String? getAuthToken() {
+    return _prefs!.getString('auth_token');
+  }
+
+  Future<void> clearAuthToken() async {
+    await _prefs!.remove('auth_token');
+  }
 }

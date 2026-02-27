@@ -7,6 +7,8 @@ import 'package:image_picker/image_picker.dart';
 import '../widgets/auth_widgets.dart';
 import 'login_screen.dart';
 import 'register_details_screen.dart';
+import '../state/auth_controller.dart';
+import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -64,9 +66,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Future<void> _onNext() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
+    if (!_formKey.currentState!.validate()) return;
 
     final email = _emailController.text.trim();
     final password = _passwordController.text;
@@ -78,18 +78,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
       setState(() => _error = 'Please enter your name.');
       return;
     }
+
     if (phone.isEmpty) {
       setState(() => _error = 'Please enter your phone number.');
       return;
     }
-    if (email.isEmpty || !email.contains('@')) {
+
+    if (!email.contains('@')) {
       setState(() => _error = 'Please enter a valid email.');
       return;
     }
+
     if (password.length < 6) {
       setState(() => _error = 'Password must be at least 6 characters.');
       return;
     }
+
     if (password != confirm) {
       setState(() => _error = 'Passwords do not match.');
       return;
@@ -102,25 +106,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     setState(() => _error = null);
 
+    final auth = context.read<AuthController>();
+
+    await auth.register(email, password, name);
+
     if (!mounted) return;
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => RegisterDetailsScreen(
-          name: name,
-          email: email,
-          phone: phone,
-          password: password,
-          age: _age,
-          weight: _weight,
-          height: _height,
-          useMetricWeight: _useMetricWeight,
-          useMetricHeight: _useMetricHeight,
-          gender: _gender!,
-          avatarPath: _avatarPath,
+
+    if (auth.isAuthenticated) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => RegisterDetailsScreen(
+            name: name,
+            email: email,
+            phone: phone,
+            password: password,
+            age: _age,
+            weight: _weight,
+            height: _height,
+            useMetricWeight: _useMetricWeight,
+            useMetricHeight: _useMetricHeight,
+            gender: _gender!,
+            avatarPath: _avatarPath,
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      setState(() => _error = auth.error ?? "Registration failed");
+    }
   }
 
   @override
