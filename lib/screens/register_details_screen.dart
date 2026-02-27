@@ -1,8 +1,7 @@
+// register_details_screen.dart
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'dart:ui';
-
-import '../state/onboarding_controller.dart';
+import '../services/user_service.dart';
 import '../widgets/auth_widgets.dart';
 import 'home_shell.dart';
 
@@ -56,65 +55,45 @@ class _RegisterDetailsScreenState extends State<RegisterDetailsScreen> {
   ];
 
   Future<void> _onCreateAccount() async {
-    if (_goal == null) {
-      setState(() => _error = 'Please select your fitness goal.');
-      return;
-    }
-    if (_hasBackPain == null) {
-      setState(() => _error = 'Please indicate if you have back pain.');
-      return;
-    }
-    if (_hasKneePain == null) {
-      setState(() => _error = 'Please indicate if you have knee pain.');
-      return;
-    }
-    if (_planDuration == null) {
-      setState(() => _error = 'Please select a plan duration.');
-      return;
-    }
-    if (_dumbbellOption == null) {
-      setState(() => _error = 'Please indicate if you have dumbbells.');
-      return;
-    }
-    if (_levelOfPhysique == null) {
-      setState(() => _error = 'Please select your level of physique.');
+    if (_goal == null ||
+        _hasBackPain == null ||
+        _hasKneePain == null ||
+        _planDuration == null ||
+        _dumbbellOption == null ||
+        _levelOfPhysique == null) {
+      setState(() => _error = "Please complete all fields.");
       return;
     }
 
     setState(() => _error = null);
 
-    final ctrl = context.read<OnboardingController>();
-    ctrl.setAuth(widget.email, widget.password);
-    await ctrl.setDisplayName(widget.name);
-    await ctrl.setPhoneNumber(widget.phone);
-    await ctrl.setAge(widget.age);
-    await ctrl.setWeight(widget.weight);
-    await ctrl.setHeight(widget.height);
+    try {
+      final userService = UserService();
 
-    // Convert logic from previous use cases
-    if (ctrl.useMetricWeight != widget.useMetricWeight) {
-      await ctrl.toggleWeightUnit();
-    }
-    if (ctrl.useMetricHeight != widget.useMetricHeight) {
-      await ctrl.toggleHeightUnit();
-    }
+      await userService.updateProfile({
+        "age": widget.age,
+        "height": widget.height,
+        "weight": widget.weight,
+        "goal": _goal,
+        "level": _levelOfPhysique,
+        "planDuration": _planDuration,
+        "hasDumbbell": _dumbbellOption,
+        "hasBackPain": _hasBackPain,
+        "hasKneePain": _hasKneePain,
+        "phone": widget.phone,
+        "gender": widget.gender,
+      });
 
-    await ctrl.setGoal(_goal!);
-    ctrl.setHealth(backPain: _hasBackPain, kneePain: _hasKneePain);
-    await ctrl.setPlanDuration(_planDuration!);
-    await ctrl.setDumbbellOption(_dumbbellOption!);
-    await ctrl.setLevelOfPhysique(_levelOfPhysique!);
-    await ctrl.setGender(widget.gender);
-    if (widget.avatarPath != null) {
-      await ctrl.setAvatarPath(widget.avatarPath);
-    }
+      if (!mounted) return;
 
-    if (!mounted) return;
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (_) => const HomeShell()),
-      (route) => false,
-    );
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const HomeShell()),
+        (route) => false,
+      );
+    } catch (e) {
+      setState(() => _error = "Failed to create account. Try again.");
+    }
   }
 
   @override

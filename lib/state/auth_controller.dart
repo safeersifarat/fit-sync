@@ -3,9 +3,6 @@ import '../core/storage/storage_service.dart';
 import '../services/auth_service.dart';
 
 
-
-
-
 class AuthController extends ChangeNotifier {
   final AuthService _authService = AuthService();
 
@@ -29,6 +26,8 @@ class AuthController extends ChangeNotifier {
     notifyListeners();
   }
 
+
+
   Future<void> register(String email, String password, String name) async {
     try {
       _isLoading = true;
@@ -44,7 +43,7 @@ class AuthController extends ChangeNotifier {
       _userId = data["userId"];
 
       final storage = await StorageService.getInstance();
-      await storage.saveAppSettings(languageCode: _token); // TEMP
+      await storage.saveAuthToken(_token!);
 
       _isAuthenticated = true;
       _error = null;
@@ -61,16 +60,13 @@ class AuthController extends ChangeNotifier {
       _isLoading = true;
       notifyListeners();
 
-      final data = await _authService.login(
-        email: email,
-        password: password,
-      );
+      final data = await _authService.login(email: email, password: password);
 
       _token = data["token"];
       _userId = data["userId"];
 
       final storage = await StorageService.getInstance();
-      await storage.saveAppSettings(languageCode: _token); // TEMP
+      await storage.saveAuthToken(_token!);
 
       _isAuthenticated = true;
       _error = null;
@@ -92,4 +88,6 @@ class AuthController extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  
 }
