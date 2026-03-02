@@ -1,11 +1,13 @@
 import 'dart:convert';
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
   static String get baseUrl {
-    if (Platform.isAndroid) return "http://10.0.2.2:5000/api/auth";
-    return "http://127.0.0.1:5000/api/auth";
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+      return "http://10.0.2.2:5001/api/auth";
+    }
+    return "http://127.0.0.1:5001/api/auth";
   }
 
   Future<Map<String, dynamic>> register({
@@ -44,6 +46,24 @@ class AuthService {
       return data;
     } else {
       throw Exception(data["error"] ?? "Login failed");
+    }
+  }
+
+  Future<Map<String, dynamic>> forgotPassword({
+    required String email,
+  }) async {
+    final response = await http.post(
+      Uri.parse("$baseUrl/forgot-password"),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({"email": email}),
+    );
+
+    final data = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      return data;
+    } else {
+      throw Exception(data["error"] ?? "Failed to send reset email");
     }
   }
 }

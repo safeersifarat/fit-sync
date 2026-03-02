@@ -188,12 +188,13 @@ class SquatPoseService {
         isGoodDepth = depthAngle < 110;
         isGoodPosture = backAngle > 50;
 
-        if (depthAngle > 150)
+        if (depthAngle > 150) {
           repPhase = 'standing';
-        else if (depthAngle < 100)
+        } else if (depthAngle < 100) {
           repPhase = 'squatting';
-        else
+        } else {
           repPhase = 'transitioning';
+        }
 
         if (!isGoodPosture && repPhase == 'squatting') {
           message = 'Keep your chest up!';

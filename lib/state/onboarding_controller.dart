@@ -45,7 +45,7 @@ class OnboardingController extends ChangeNotifier {
   bool? dumbbellOption;
   String? levelOfPhysique; // easy, medium, hard
   bool appleHealthEnabled = true;
-  bool darkModeEnabled = false;
+  bool darkModeEnabled = true;
   String languageCode = 'en'; // e.g. 'en', 'es'
 
   bool get isLoading => _isLoading;
