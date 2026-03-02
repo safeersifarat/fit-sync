@@ -12,6 +12,7 @@ class AuthScaffold extends StatelessWidget {
     this.subtitle,
     required this.children,
     this.showBack = true,
+    this.showLogo = true,
     this.onBack,
   });
 
@@ -19,6 +20,7 @@ class AuthScaffold extends StatelessWidget {
   final String? subtitle;
   final List<Widget> children;
   final bool showBack;
+  final bool showLogo;
   final VoidCallback? onBack;
 
   @override
@@ -58,44 +60,45 @@ class AuthScaffold extends StatelessWidget {
                     ),
                   ),
                 const SizedBox(height: 32),
-                Center(
-                  child: ClipOval(
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                      child: Container(
-                        height: 64,
-                        width: 64,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              Colors.white.withValues(alpha: 0.2),
-                              Colors.white.withValues(alpha: 0.1),
+                if (showLogo)
+                  Center(
+                    child: ClipOval(
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                        child: Container(
+                          height: 64,
+                          width: 64,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Colors.white.withValues(alpha: 0.2),
+                                Colors.white.withValues(alpha: 0.1),
+                              ],
+                            ),
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.4),
+                              width: 2.5,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.2),
+                                blurRadius: 20,
+                                spreadRadius: 2,
+                              ),
                             ],
                           ),
-                          border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.4),
-                            width: 2.5,
+                          child: const Icon(
+                            Icons.fitness_center,
+                            color: Colors.white,
+                            size: 28,
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.2),
-                              blurRadius: 20,
-                              spreadRadius: 2,
-                            ),
-                          ],
-                        ),
-                        child: const Icon(
-                          Icons.fitness_center,
-                          color: Colors.white,
-                          size: 28,
                         ),
                       ),
                     ),
                   ),
-                ),
                 const SizedBox(height: 40),
                 Text(
                   title,

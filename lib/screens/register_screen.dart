@@ -140,6 +140,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return AuthScaffold(
       title: 'Create your\naccount',
+      showLogo: false,
       children: [
         Form(
           key: _formKey,

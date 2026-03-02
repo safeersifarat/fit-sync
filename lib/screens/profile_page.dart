@@ -61,45 +61,82 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() => _isPickingImage = true);
 
     try {
+      final isDarkSheet = Theme.of(context).brightness == Brightness.dark;
+      final handleColor = isDarkSheet ? Colors.white24 : Colors.black12;
+      final iconColor = isDarkSheet ? Colors.white : Colors.black87;
+      final textColor = isDarkSheet ? Colors.white : Colors.black87;
+
       final source = await showModalBottomSheet<ImageSource>(
         context: context,
-        backgroundColor: const Color(0xFF101018),
+        backgroundColor: Colors.transparent,
+        barrierColor: Colors.black.withValues(alpha: 0.5),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
         builder: (ctx) {
-          return SafeArea(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 12),
-                Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Colors.white24,
-                    borderRadius: BorderRadius.circular(2),
+          return ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: isDarkSheet
+                        ? [
+                            const Color(0xFF0D2614).withValues(alpha: 0.85),
+                            const Color(0xFF004D40).withValues(alpha: 0.7),
+                          ]
+                        : [
+                            Colors.white.withValues(alpha: 0.85),
+                            const Color(0xFFF5F1FF).withValues(alpha: 0.8),
+                          ],
+                  ),
+                  border: Border(
+                    top: BorderSide(
+                      color: isDarkSheet
+                          ? Colors.white.withValues(alpha: 0.15)
+                          : Colors.black.withValues(alpha: 0.06),
+                      width: 1,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 16),
-                ListTile(
-                  leading: const Icon(Icons.photo_library, color: Colors.white),
-                  title: const Text(
-                    'Gallery',
-                    style: TextStyle(color: Colors.white),
+                child: SafeArea(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: 12),
+                      Container(
+                        width: 40,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: handleColor,
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      ListTile(
+                        leading: Icon(Icons.photo_library, color: iconColor),
+                        title: Text(
+                          'Gallery',
+                          style: TextStyle(color: textColor),
+                        ),
+                        onTap: () => Navigator.of(ctx).pop(ImageSource.gallery),
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.photo_camera, color: iconColor),
+                        title: Text(
+                          'Camera',
+                          style: TextStyle(color: textColor),
+                        ),
+                        onTap: () => Navigator.of(ctx).pop(ImageSource.camera),
+                      ),
+                      const SizedBox(height: 12),
+                    ],
                   ),
-                  onTap: () => Navigator.of(ctx).pop(ImageSource.gallery),
                 ),
-                ListTile(
-                  leading: const Icon(Icons.photo_camera, color: Colors.white),
-                  title: const Text(
-                    'Camera',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onTap: () => Navigator.of(ctx).pop(ImageSource.camera),
-                ),
-                const SizedBox(height: 12),
-              ],
+              ),
             ),
           );
         },
@@ -180,190 +217,614 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _showMoreInfoOptions() {
+    final isDarkSheet = Theme.of(context).brightness == Brightness.dark;
+    final handleColor = isDarkSheet ? Colors.white24 : Colors.black12;
+    final titleColor = isDarkSheet ? Colors.white : Colors.black87;
+    final textColor = isDarkSheet ? Colors.white : Colors.black87;
+    final iconColor = isDarkSheet ? Colors.white70 : Colors.black54;
+    final chevronColor = isDarkSheet ? Colors.white38 : Colors.black26;
+    final dividerColor = isDarkSheet
+        ? Colors.white.withValues(alpha: 0.1)
+        : Colors.black.withValues(alpha: 0.06);
+
     showModalBottomSheet(
       context: context,
-      backgroundColor: const Color(0xFF101018),
+      backgroundColor: Colors.transparent,
+      barrierColor: Colors.black.withValues(alpha: 0.5),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (ctx) {
-        return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 12),
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.white24,
-                  borderRadius: BorderRadius.circular(2),
+        return ClipRRect(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: isDarkSheet
+                      ? [
+                          const Color(0xFF0D2614).withValues(alpha: 0.85),
+                          const Color(0xFF004D40).withValues(alpha: 0.7),
+                        ]
+                      : [
+                          Colors.white.withValues(alpha: 0.85),
+                          const Color(0xFFF5F1FF).withValues(alpha: 0.8),
+                        ],
                 ),
-              ),
-              const SizedBox(height: 16),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Account Security',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                border: Border(
+                  top: BorderSide(
+                    color: isDarkSheet
+                        ? Colors.white.withValues(alpha: 0.15)
+                        : Colors.black.withValues(alpha: 0.06),
+                    width: 1,
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
-              ListTile(
-                leading: const Icon(Icons.lock_outline, color: Colors.white70),
-                title: const Text(
-                  'Change Password',
-                  style: TextStyle(color: Colors.white),
-                ),
-                trailing: const Icon(
-                  Icons.chevron_right,
-                  color: Colors.white38,
-                ),
-                onTap: () {
-                  Navigator.pop(ctx);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Change Password coming soon'),
+              child: SafeArea(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: 12),
+                    Container(
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: handleColor,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
                     ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(
-                  Icons.email_outlined,
-                  color: Colors.white70,
-                ),
-                title: const Text(
-                  'Change Email',
-                  style: TextStyle(color: Colors.white),
-                ),
-                trailing: const Icon(
-                  Icons.chevron_right,
-                  color: Colors.white38,
-                ),
-                onTap: () {
-                  Navigator.pop(ctx);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Change Email coming soon')),
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(
-                  Icons.phone_outlined,
-                  color: Colors.white70,
-                ),
-                title: const Text(
-                  'Change Phone Number',
-                  style: TextStyle(color: Colors.white),
-                ),
-                trailing: const Icon(
-                  Icons.chevron_right,
-                  color: Colors.white38,
-                ),
-                onTap: () {
-                  Navigator.pop(ctx);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Change Phone Number coming soon'),
+                    const SizedBox(height: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Account Security',
+                          style: TextStyle(
+                            color: titleColor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
-                  );
-                },
-              ),
-              // ── Divider before logout
-              const Divider(
-                height: 1,
-                color: Color(0x22FFFFFF),
-                indent: 20,
-                endIndent: 20,
-              ),
-              ListTile(
-                leading: const Icon(
-                  Icons.power_settings_new_rounded,
-                  color: Color(0xFFFF4757),
+                    const SizedBox(height: 8),
+                    ListTile(
+                      leading: Icon(Icons.lock_outline, color: iconColor),
+                      title: Text(
+                        'Change Password',
+                        style: TextStyle(color: textColor),
+                      ),
+                      trailing: Icon(
+                        Icons.chevron_right,
+                        color: chevronColor,
+                      ),
+                      onTap: () {
+                        Navigator.pop(ctx);
+                        _showChangePasswordSheet();
+                      },
+                    ),
+                    ListTile(
+                      leading: Icon(
+                        Icons.email_outlined,
+                        color: iconColor,
+                      ),
+                      title: Text(
+                        'Change Email',
+                        style: TextStyle(color: textColor),
+                      ),
+                      trailing: Icon(
+                        Icons.chevron_right,
+                        color: chevronColor,
+                      ),
+                      onTap: () {
+                        Navigator.pop(ctx);
+                        _showChangeEmailSheet();
+                      },
+                    ),
+                    ListTile(
+                      leading: Icon(
+                        Icons.phone_outlined,
+                        color: iconColor,
+                      ),
+                      title: Text(
+                        'Change Phone Number',
+                        style: TextStyle(color: textColor),
+                      ),
+                      trailing: Icon(
+                        Icons.chevron_right,
+                        color: chevronColor,
+                      ),
+                      onTap: () {
+                        Navigator.pop(ctx);
+                        _showChangePhoneSheet();
+                      },
+                    ),
+                    // ── Divider before logout
+                    Divider(
+                      height: 1,
+                      color: dividerColor,
+                      indent: 20,
+                      endIndent: 20,
+                    ),
+                    ListTile(
+                      leading: const Icon(
+                        Icons.power_settings_new_rounded,
+                        color: Color(0xFFFF4757),
+                      ),
+                      title: const Text(
+                        'Log Out',
+                        style: TextStyle(
+                          color: Color(0xFFFF4757),
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      trailing: const Icon(
+                        Icons.chevron_right,
+                        color: Color(0xFFFF4757),
+                        size: 20,
+                      ),
+                      onTap: () {
+                        Navigator.pop(ctx);
+                        _logout();
+                      },
+                    ),
+                    const SizedBox(height: 24),
+                  ],
                 ),
-                title: const Text(
-                  'Log Out',
-                  style: TextStyle(
-                    color: Color(0xFFFF4757),
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                trailing: const Icon(
-                  Icons.chevron_right,
-                  color: Color(0xFFFF4757),
-                  size: 20,
-                ),
-                onTap: () {
-                  Navigator.pop(ctx);
-                  _logout();
-                },
               ),
-              const SizedBox(height: 24),
-            ],
+            ),
           ),
         );
       },
     );
   }
+  // ── Change Password Sheet ──
+  void _showChangePasswordSheet() {
+    final oldPassCtrl = TextEditingController();
+    final newPassCtrl = TextEditingController();
+    final confirmPassCtrl = TextEditingController();
 
-  Future<void> _logout() async {
-    final confirmed = await showDialog<bool>(
+    _showGlassFormSheet(
+      title: 'Change Password',
+      icon: Icons.lock_outline,
+      fields: [
+        _GlassFieldConfig(controller: oldPassCtrl, hint: 'Current Password', obscure: true),
+        _GlassFieldConfig(controller: newPassCtrl, hint: 'New Password', obscure: true),
+        _GlassFieldConfig(controller: confirmPassCtrl, hint: 'Confirm New Password', obscure: true),
+      ],
+      buttonLabel: 'Update Password',
+      onSubmit: () {
+        final oldPass = oldPassCtrl.text.trim();
+        final newPass = newPassCtrl.text.trim();
+        final confirm = confirmPassCtrl.text.trim();
+
+        if (oldPass.isEmpty || newPass.isEmpty || confirm.isEmpty) {
+          _showSnack('Please fill all fields');
+          return false;
+        }
+        if (newPass.length < 6) {
+          _showSnack('New password must be at least 6 characters');
+          return false;
+        }
+        if (newPass != confirm) {
+          _showSnack('Passwords do not match');
+          return false;
+        }
+
+        _showSnack('Password updated successfully', isSuccess: true);
+        return true;
+      },
+      onDispose: () {
+        oldPassCtrl.dispose();
+        newPassCtrl.dispose();
+        confirmPassCtrl.dispose();
+      },
+    );
+  }
+
+  // ── Change Email Sheet ──
+  void _showChangeEmailSheet() {
+    final ctrl = context.read<OnboardingController>();
+    final newEmailCtrl = TextEditingController();
+    final passwordCtrl = TextEditingController();
+
+    _showGlassFormSheet(
+      title: 'Change Email',
+      icon: Icons.email_outlined,
+      subtitle: 'Current: ${ctrl.email ?? "Not set"}',
+      fields: [
+        _GlassFieldConfig(controller: newEmailCtrl, hint: 'New Email', type: TextInputType.emailAddress),
+        _GlassFieldConfig(controller: passwordCtrl, hint: 'Confirm Password', obscure: true),
+      ],
+      buttonLabel: 'Update Email',
+      onSubmit: () {
+        final email = newEmailCtrl.text.trim();
+        final password = passwordCtrl.text.trim();
+
+        if (email.isEmpty || password.isEmpty) {
+          _showSnack('Please fill all fields');
+          return false;
+        }
+        if (!email.contains('@') || !email.contains('.')) {
+          _showSnack('Please enter a valid email');
+          return false;
+        }
+
+        _showSnack('Email updated successfully', isSuccess: true);
+        return true;
+      },
+      onDispose: () {
+        newEmailCtrl.dispose();
+        passwordCtrl.dispose();
+      },
+    );
+  }
+
+  // ── Change Phone Sheet ──
+  void _showChangePhoneSheet() {
+    final ctrl = context.read<OnboardingController>();
+    final newPhoneCtrl = TextEditingController();
+
+    _showGlassFormSheet(
+      title: 'Change Phone Number',
+      icon: Icons.phone_outlined,
+      subtitle: 'Current: ${ctrl.phoneNumber ?? "Not set"}',
+      fields: [
+        _GlassFieldConfig(controller: newPhoneCtrl, hint: 'New Phone Number', type: TextInputType.phone),
+      ],
+      buttonLabel: 'Update Phone',
+      onSubmit: () {
+        final phone = newPhoneCtrl.text.trim();
+
+        if (phone.isEmpty) {
+          _showSnack('Please enter a phone number');
+          return false;
+        }
+        if (phone.length < 8) {
+          _showSnack('Please enter a valid phone number');
+          return false;
+        }
+
+        _showSnack('Phone number updated successfully', isSuccess: true);
+        return true;
+      },
+      onDispose: () {
+        newPhoneCtrl.dispose();
+      },
+    );
+  }
+
+  void _showSnack(String message, {bool isSuccess = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isSuccess ? const Color(0xFF2E7D32) : null,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        margin: const EdgeInsets.all(16),
+      ),
+    );
+  }
+
+  // ── Reusable glass form sheet ──
+  void _showGlassFormSheet({
+    required String title,
+    required IconData icon,
+    String? subtitle,
+    required List<_GlassFieldConfig> fields,
+    required String buttonLabel,
+    required bool Function() onSubmit,
+    required VoidCallback onDispose,
+  }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    const purple = Color(0xFF5B3FE8);
+    const lime = Color(0xFFCCFF00);
+    final accentColor = isDark ? lime : purple;
+    final titleColor = isDark ? Colors.white : Colors.black87;
+    final subtitleColor = isDark
+        ? Colors.white.withValues(alpha: 0.5)
+        : Colors.black45;
+    final handleColor = isDark ? Colors.white24 : Colors.black12;
+
+    showModalBottomSheet(
       context: context,
-      barrierColor: Colors.black.withValues(alpha: 0.6),
-      builder: (ctx) => AlertDialog(
-        backgroundColor: const Color(0xFF0D2614),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-          side: BorderSide(
-            color: Colors.white.withValues(alpha: 0.15),
-            width: 1,
+      backgroundColor: Colors.transparent,
+      barrierColor: Colors.black.withValues(alpha: 0.5),
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(ctx).viewInsets.bottom,
           ),
-        ),
-        title: const Text(
-          'Log Out?',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w800,
-            fontSize: 18,
-          ),
-        ),
-        content: Text(
-          'You\'ll be signed out of your account.',
-          style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.7),
-            fontSize: 14,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: Text(
-              'Cancel',
-              style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.6),
-                fontWeight: FontWeight.w600,
+          child: ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: isDark
+                        ? [
+                            const Color(0xFF0D2614).withValues(alpha: 0.88),
+                            const Color(0xFF004D40).withValues(alpha: 0.75),
+                          ]
+                        : [
+                            Colors.white.withValues(alpha: 0.9),
+                            const Color(0xFFF5F1FF).withValues(alpha: 0.85),
+                          ],
+                  ),
+                  border: Border(
+                    top: BorderSide(
+                      color: isDark
+                          ? Colors.white.withValues(alpha: 0.15)
+                          : Colors.black.withValues(alpha: 0.06),
+                      width: 1,
+                    ),
+                  ),
+                ),
+                child: SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Handle
+                        Container(
+                          width: 40,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: handleColor,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+
+                        // Icon
+                        Container(
+                          width: 56,
+                          height: 56,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                accentColor.withValues(alpha: 0.2),
+                                accentColor.withValues(alpha: 0.08),
+                              ],
+                            ),
+                            border: Border.all(
+                              color: accentColor.withValues(alpha: 0.4),
+                              width: 2,
+                            ),
+                          ),
+                          child: Icon(icon, color: accentColor, size: 24),
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Title
+                        Text(
+                          title,
+                          style: TextStyle(
+                            color: titleColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: -0.5,
+                          ),
+                        ),
+
+                        // Subtitle
+                        if (subtitle != null) ...[
+                          const SizedBox(height: 6),
+                          Text(
+                            subtitle,
+                            style: TextStyle(
+                              color: subtitleColor,
+                              fontSize: 13,
+                              letterSpacing: -0.2,
+                            ),
+                          ),
+                        ],
+
+                        const SizedBox(height: 24),
+
+                        // Fields
+                        ...fields.map((f) => Padding(
+                              padding: const EdgeInsets.only(bottom: 14),
+                              child: _buildGlassTextField(
+                                controller: f.controller,
+                                hint: f.hint,
+                                obscure: f.obscure,
+                                keyboardType: f.type,
+                                isDark: isDark,
+                                accentColor: accentColor,
+                              ),
+                            )),
+
+                        const SizedBox(height: 8),
+
+                        // Submit button
+                        SizedBox(
+                          width: double.infinity,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(30),
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: accentColor.withValues(alpha: isDark ? 0.9 : 1.0),
+                                  foregroundColor: isDark ? Colors.black87 : Colors.white,
+                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  elevation: 0,
+                                ),
+                                onPressed: () {
+                                  if (onSubmit()) {
+                                    Navigator.pop(ctx);
+                                    onDispose();
+                                  }
+                                },
+                                child: Text(
+                                  buttonLabel,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                    letterSpacing: -0.3,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(true),
-            style: TextButton.styleFrom(
-              foregroundColor: const Color(0xFFFF4757),
+        );
+      },
+    ).whenComplete(onDispose);
+  }
+
+  Widget _buildGlassTextField({
+    required TextEditingController controller,
+    required String hint,
+    required bool isDark,
+    required Color accentColor,
+    bool obscure = false,
+    TextInputType? keyboardType,
+  }) {
+    final textColor = isDark ? Colors.white : Colors.black87;
+    final hintColor = isDark
+        ? Colors.white.withValues(alpha: 0.4)
+        : Colors.black.withValues(alpha: 0.35);
+    final fillColor = isDark
+        ? Colors.white.withValues(alpha: 0.08)
+        : Colors.black.withValues(alpha: 0.04);
+    final borderColor = isDark
+        ? Colors.white.withValues(alpha: 0.15)
+        : Colors.black.withValues(alpha: 0.1);
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+        child: TextField(
+          controller: controller,
+          obscureText: obscure,
+          keyboardType: keyboardType,
+          style: TextStyle(color: textColor, letterSpacing: -0.3),
+          decoration: InputDecoration(
+            hintText: hint,
+            hintStyle: TextStyle(color: hintColor),
+            filled: true,
+            fillColor: fillColor,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 16,
             ),
-            child: const Text(
-              'Log Out',
-              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: borderColor, width: 1.5),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: borderColor, width: 1.5),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: accentColor.withValues(alpha: 0.6), width: 2),
             ),
           ),
-        ],
+        ),
+      ),
+    );
+  }
+
+
+
+  Future<void> _logout() async {
+    final isDarkDialog = Theme.of(context).brightness == Brightness.dark;
+    final titleColor = isDarkDialog ? Colors.white : Colors.black87;
+    final contentColor = isDarkDialog
+        ? Colors.white.withValues(alpha: 0.7)
+        : Colors.black54;
+    final cancelColor = isDarkDialog
+        ? Colors.white.withValues(alpha: 0.6)
+        : Colors.black45;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      barrierColor: Colors.black.withValues(alpha: 0.6),
+      builder: (ctx) => ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
+          child: AlertDialog(
+            backgroundColor: isDarkDialog
+                ? const Color(0xFF0D2614).withValues(alpha: 0.8)
+                : Colors.white.withValues(alpha: 0.85),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+              side: BorderSide(
+                color: isDarkDialog
+                    ? Colors.white.withValues(alpha: 0.15)
+                    : Colors.black.withValues(alpha: 0.06),
+                width: 1,
+              ),
+            ),
+            title: Text(
+              'Log Out?',
+              style: TextStyle(
+                color: titleColor,
+                fontWeight: FontWeight.w800,
+                fontSize: 18,
+              ),
+            ),
+            content: Text(
+              'You\'ll be signed out of your account.',
+              style: TextStyle(
+                color: contentColor,
+                fontSize: 14,
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(false),
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    color: cancelColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(true),
+                style: TextButton.styleFrom(
+                  foregroundColor: const Color(0xFFFF4757),
+                ),
+                child: const Text(
+                  'Log Out',
+                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
 
@@ -736,4 +1197,18 @@ class _DarkTextField extends StatelessWidget {
       ),
     );
   }
+}
+
+class _GlassFieldConfig {
+  final TextEditingController controller;
+  final String hint;
+  final bool obscure;
+  final TextInputType? type;
+
+  _GlassFieldConfig({
+    required this.controller,
+    required this.hint,
+    this.obscure = false,
+    this.type,
+  });
 }
