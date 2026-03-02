@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'state/auth_controller.dart';
-import 'screens/welcome_screen.dart';
+import 'screens/splash_screen.dart';
 import 'state/calorie_tracker_controller.dart';
 import 'state/onboarding_controller.dart';
 import 'core/theme/theme_controller.dart';
@@ -49,7 +49,7 @@ class FitSyncApp extends StatelessWidget {
                 child: child!,
               );
             },
-            home: const WelcomeScreen(),
+            home: const SplashScreen(),
           );
         },
       ),

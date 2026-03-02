@@ -8,6 +8,7 @@ import '../state/onboarding_controller.dart';
 import '../widgets/auth_background.dart';
 import '../core/widgets/glass_container.dart';
 import '../core/theme/app_theme.dart';
+import '../core/theme/theme_controller.dart';
 import 'app_settings_page.dart';
 import 'profile_page.dart';
 
@@ -17,12 +18,13 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ctrl = context.watch<OnboardingController>();
+    final themeController = context.watch<ThemeController>();
     final avatarPath = ctrl.avatarPath;
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: AuthBackground(
-        child: SafeArea(
+    return AuthBackground(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
             child: Column(
@@ -73,69 +75,30 @@ class SettingsPage extends StatelessWidget {
                       color: AppTheme.getTextColor(context, opacity: 0.1),
                     ),
                     _SettingsRow(
-                      title: 'Text Size',
-                      trailingText: 'Medium',
-                      onTap: () {
-                        // Placeholder for text size dialog.
-                        final isDark =
-                            Theme.of(context).brightness == Brightness.dark;
-                        showModalBottomSheet(
-                          context: context,
-                          backgroundColor: isDark
-                              ? const Color(0xFF101018)
-                              : Colors.white,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(24),
-                            ),
-                          ),
-                          builder: (ctx) {
-                            return Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                24,
-                                16,
-                                24,
-                                24,
-                              ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Text Size',
-                                    style: Theme.of(ctx).textTheme.titleLarge
-                                        ?.copyWith(fontWeight: FontWeight.w700),
-                                  ),
-                                  const SizedBox(height: 16),
-                                  Text(
-                                    'Coming soon. Your text size is currently set to Medium.',
-                                    style: TextStyle(
-                                      color: AppTheme.getTextColor(
-                                        ctx,
-                                        opacity: 0.7,
-                                      ),
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 16),
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: TextButton(
-                                      onPressed: () => Navigator.of(ctx).pop(),
-                                      style: TextButton.styleFrom(
-                                        foregroundColor: const Color(
-                                          0xFFCCFF00,
-                                        ),
-                                      ),
-                                      child: const Text('Close'),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        );
-                      },
+                      title: 'Dark Mode',
+                      trailingWidget: Builder(
+                        builder: (context) {
+                          final isDark =
+                              Theme.of(context).brightness == Brightness.dark;
+                          return Switch(
+                            value: ctrl.darkModeEnabled,
+                            activeThumbColor: isDark
+                                ? Colors.black
+                                : Colors.white,
+                            activeTrackColor: isDark
+                                ? const Color(0xFFCCFF00)
+                                : const Color(0xFF5B3FE8),
+                            inactiveThumbColor: Colors.white,
+                            inactiveTrackColor: Colors.white24,
+                            onChanged: (val) async {
+                              await ctrl.toggleDarkMode();
+                              themeController.syncWithOnboarding(
+                                ctrl.darkModeEnabled,
+                              );
+                            },
+                          );
+                        },
+                      ),
                     ),
                   ],
                 ),
@@ -143,6 +106,7 @@ class SettingsPage extends StatelessWidget {
                 const _SectionTitle('Support'),
                 const SizedBox(height: 12),
                 const _SupportCard(),
+                const SizedBox(height: 32),
               ],
             ),
           ),
@@ -182,6 +146,9 @@ class _ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    const purple = Color(0xFF5B3FE8);
+    const accentGreen = Color(0xFFCCFF00);
     final heightLabel = useMetricHeight
         ? '${height.round()} cm'
         : '${(height / 2.54).round()} in';
@@ -223,9 +190,13 @@ class _ProfileHeader extends StatelessWidget {
                       child: ClipOval(
                         child: avatarPath != null
                             ? Image.file(File(avatarPath!), fit: BoxFit.cover)
-                            : Image.asset(
-                                'assets/avatar_placeholder.png',
-                                fit: BoxFit.cover,
+                            : Container(
+                                color: const Color(0xFF1A3A21),
+                                child: const Icon(
+                                  Icons.person_rounded,
+                                  color: Colors.white54,
+                                  size: 56,
+                                ),
                               ),
                       ),
                     ),
@@ -243,8 +214,8 @@ class _ProfileHeader extends StatelessWidget {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        const Color(0xFFCCFF00).withValues(alpha: 0.9),
-                        const Color(0xFFCCFF00).withValues(alpha: 0.7),
+                        (isDark ? accentGreen : purple).withValues(alpha: 0.9),
+                        (isDark ? accentGreen : purple).withValues(alpha: 0.7),
                       ],
                     ),
                     shape: BoxShape.circle,
@@ -254,16 +225,18 @@ class _ProfileHeader extends StatelessWidget {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFFCCFF00).withValues(alpha: 0.4),
+                        color: (isDark ? accentGreen : purple).withValues(
+                          alpha: 0.4,
+                        ),
                         blurRadius: 12,
                         spreadRadius: 1,
                       ),
                     ],
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.edit,
                     size: 16,
-                    color: Colors.black87,
+                    color: isDark ? Colors.black87 : Colors.white,
                   ),
                 ),
               ),
@@ -328,10 +301,10 @@ class _SettingsCard extends StatelessWidget {
 }
 
 class _SettingsRow extends StatelessWidget {
-  const _SettingsRow({required this.title, this.trailingText, this.onTap});
+  const _SettingsRow({required this.title, this.trailingWidget, this.onTap});
 
   final String title;
-  final String? trailingText;
+  final Widget? trailingWidget;
   final VoidCallback? onTap;
 
   @override
@@ -355,21 +328,14 @@ class _SettingsRow extends StatelessWidget {
                   ),
                 ),
               ),
-              if (trailingText != null) ...[
-                Text(
-                  trailingText!,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppTheme.getTextColor(context, opacity: 0.6),
-                    letterSpacing: -0.3,
-                  ),
+              if (trailingWidget != null)
+                trailingWidget!
+              else
+                Icon(
+                  Icons.chevron_right_rounded,
+                  color: AppTheme.getTextColor(context, opacity: 0.5),
+                  size: 20,
                 ),
-                const SizedBox(width: 8),
-              ],
-              Icon(
-                Icons.chevron_right_rounded,
-                color: AppTheme.getTextColor(context, opacity: 0.5),
-                size: 20,
-              ),
             ],
           ),
         ),

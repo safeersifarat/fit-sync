@@ -5,13 +5,14 @@ import 'app_theme.dart';
 
 class ThemeController extends ChangeNotifier {
   StorageService? _storage;
-  bool _isDarkMode = false;
+  bool _isDarkMode = true;
   bool _isLoading = false;
 
   bool get isDarkMode => _isDarkMode;
   bool get isLoading => _isLoading;
 
-  ThemeData get currentTheme => AppTheme.getDarkTheme();
+  ThemeData get currentTheme =>
+      _isDarkMode ? AppTheme.getDarkTheme() : AppTheme.getLightTheme();
 
   /// Initialize and load theme preference
   Future<void> initialize() async {
@@ -20,7 +21,7 @@ class ThemeController extends ChangeNotifier {
 
     try {
       _storage = await StorageService.getInstance();
-      _isDarkMode = _storage?.getDarkModeEnabled() ?? false;
+      _isDarkMode = _storage?.getDarkModeEnabled() ?? true;
     } catch (e) {
       ErrorHandler.logError(e);
     } finally {

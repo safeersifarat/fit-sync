@@ -1,222 +1,189 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../state/onboarding_controller.dart';
 import '../widgets/auth_background.dart';
 import '../core/widgets/glass_container.dart';
-import '../core/theme/theme_controller.dart';
 
 enum AppSettingsFocus { none, notifications }
 
-class AppSettingsPage extends StatelessWidget {
+class AppSettingsPage extends StatefulWidget {
   const AppSettingsPage({super.key, this.initialFocus = AppSettingsFocus.none});
 
   final AppSettingsFocus initialFocus;
 
   @override
+  State<AppSettingsPage> createState() => _AppSettingsPageState();
+}
+
+class _AppSettingsPageState extends State<AppSettingsPage> {
+  bool _notificationsEnabled = true;
+  bool _breakfastReminder = true;
+  bool _lunchReminder = true;
+  bool _dinnerReminder = true;
+  bool _workoutReminder = true;
+
+  @override
   Widget build(BuildContext context) {
-    final ctrl = context.watch<OnboardingController>();
-    final themeController = context.watch<ThemeController>();
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
+    return AuthBackground(
+      child: Scaffold(
         backgroundColor: Colors.transparent,
-        elevation: 0,
-        iconTheme: IconThemeData(
-          color: isDark ? Colors.white : const Color(0xFF1A1A1A),
-        ),
-        title: Text(
-          'App Setting',
-          style: TextStyle(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          iconTheme: IconThemeData(
             color: isDark ? Colors.white : const Color(0xFF1A1A1A),
-            fontWeight: FontWeight.w600,
+          ),
+          title: Text(
+            'Notifications',
+            style: TextStyle(
+              color: isDark ? Colors.white : const Color(0xFF1A1A1A),
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
-      ),
-      body: AuthBackground(
-        child: SafeArea(
+        body: SafeArea(
           child: ListView(
             padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
             children: [
               _SettingsTile(
-                title: 'Reminder',
-                subtitle: 'Daily workout reminders',
-                trailing: const Icon(
-                  Icons.chevron_right_rounded,
-                  color: Colors.white70,
-                ),
-                onTap: () {
-                  // Placeholder for reminder preferences.
-                },
-              ),
-              const SizedBox(height: 12),
-              _SettingsTile(
-                title: 'Change Password',
-                trailing: const Icon(
-                  Icons.chevron_right_rounded,
-                  color: Colors.white70,
-                ),
-                onTap: () {
-                  // Placeholder for change password flow.
-                },
-              ),
-              const SizedBox(height: 12),
-              _SettingsTile(
-                title: 'Apple Health',
+                title: 'Enable Notifications',
+                subtitle: 'Turn on daily workout reminders',
                 trailing: Switch(
-                  value: ctrl.appleHealthEnabled,
-                  activeThumbColor: Colors.black,
-                  activeTrackColor: const Color(0xFFCCFF00),
+                  value: _notificationsEnabled,
+                  activeThumbColor: isDark ? Colors.black : Colors.white,
+                  activeTrackColor: isDark
+                      ? const Color(0xFFCCFF00)
+                      : const Color(0xFF5B3FE8),
                   inactiveThumbColor: Colors.white,
                   inactiveTrackColor: Colors.white24,
-                  onChanged: (_) => ctrl.toggleAppleHealth(),
-                ),
-              ),
-              const SizedBox(height: 12),
-              _SettingsTile(
-                title: 'Dark Mode',
-                trailing: Switch(
-                  value: ctrl.darkModeEnabled,
-                  activeThumbColor: Colors.black,
-                  activeTrackColor: const Color(0xFFCCFF00),
-                  inactiveThumbColor: Colors.white,
-                  inactiveTrackColor: Colors.white24,
-                  onChanged: (_) async {
-                    await ctrl.toggleDarkMode();
-                    themeController.syncWithOnboarding(ctrl.darkModeEnabled);
+                  onChanged: (val) {
+                    setState(() {
+                      _notificationsEnabled = val;
+                    });
                   },
                 ),
               ),
               const SizedBox(height: 12),
-              _SettingsTile(
-                title: 'Language',
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      _languageLabel(ctrl.languageCode),
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium?.copyWith(color: Colors.white70),
-                    ),
-                    const SizedBox(width: 4),
-                    const Icon(
-                      Icons.chevron_right_rounded,
-                      color: Colors.white70,
-                    ),
-                  ],
+              AnimatedOpacity(
+                duration: const Duration(milliseconds: 300),
+                opacity: _notificationsEnabled ? 1.0 : 0.5,
+                child: IgnorePointer(
+                  ignoring: !_notificationsEnabled,
+                  child: Column(
+                    children: [
+                      _SettingsTile(
+                        title: 'Breakfast Reminder',
+                        subtitle: 'Remind me to log breakfast',
+                        trailing: Switch(
+                          value: _breakfastReminder,
+                          activeThumbColor: isDark
+                              ? Colors.black
+                              : Colors.white,
+                          activeTrackColor: isDark
+                              ? const Color(0xFFCCFF00)
+                              : const Color(0xFF5B3FE8),
+                          inactiveThumbColor: Colors.white,
+                          inactiveTrackColor: Colors.white24,
+                          onChanged: (val) {
+                            setState(() {
+                              _breakfastReminder = val;
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      _SettingsTile(
+                        title: 'Lunch Reminder',
+                        subtitle: 'Remind me to log lunch',
+                        trailing: Switch(
+                          value: _lunchReminder,
+                          activeThumbColor: isDark
+                              ? Colors.black
+                              : Colors.white,
+                          activeTrackColor: isDark
+                              ? const Color(0xFFCCFF00)
+                              : const Color(0xFF5B3FE8),
+                          inactiveThumbColor: Colors.white,
+                          inactiveTrackColor: Colors.white24,
+                          onChanged: (val) {
+                            setState(() {
+                              _lunchReminder = val;
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      _SettingsTile(
+                        title: 'Dinner Reminder',
+                        subtitle: 'Remind me to log dinner',
+                        trailing: Switch(
+                          value: _dinnerReminder,
+                          activeThumbColor: isDark
+                              ? Colors.black
+                              : Colors.white,
+                          activeTrackColor: isDark
+                              ? const Color(0xFFCCFF00)
+                              : const Color(0xFF5B3FE8),
+                          inactiveThumbColor: Colors.white,
+                          inactiveTrackColor: Colors.white24,
+                          onChanged: (val) {
+                            setState(() {
+                              _dinnerReminder = val;
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      _SettingsTile(
+                        title: 'Workout Reminder',
+                        subtitle: 'Remind me to exercise',
+                        trailing: Switch(
+                          value: _workoutReminder,
+                          activeThumbColor: isDark
+                              ? Colors.black
+                              : Colors.white,
+                          activeTrackColor: isDark
+                              ? const Color(0xFFCCFF00)
+                              : const Color(0xFF5B3FE8),
+                          inactiveThumbColor: Colors.white,
+                          inactiveTrackColor: Colors.white24,
+                          onChanged: (val) {
+                            setState(() {
+                              _workoutReminder = val;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                onTap: () => _showLanguageSheet(context, ctrl),
               ),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  static String _languageLabel(String code) {
-    switch (code) {
-      case 'es':
-        return 'Spanish';
-      case 'fr':
-        return 'French';
-      case 'en':
-      default:
-        return 'English';
-    }
-  }
-
-  void _showLanguageSheet(BuildContext context, OnboardingController ctrl) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final backgroundColor = isDark ? const Color(0xFF101018) : Colors.white;
-    final textColor = isDark ? Colors.white : const Color(0xFF1A1A1A);
-    final dividerColor = isDark ? Colors.white24 : Colors.black12;
-
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: backgroundColor,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (ctx) {
-        return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 12),
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: dividerColor,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(height: 16),
-              ListTile(
-                title: Text('English', style: TextStyle(color: textColor)),
-                trailing: ctrl.languageCode == 'en'
-                    ? const Icon(Icons.check, color: Color(0xFFCCFF00))
-                    : null,
-                onTap: () {
-                  ctrl.setLanguage('en');
-                  Navigator.of(ctx).pop();
-                },
-              ),
-              ListTile(
-                title: Text('Spanish', style: TextStyle(color: textColor)),
-                trailing: ctrl.languageCode == 'es'
-                    ? const Icon(Icons.check, color: Color(0xFFCCFF00))
-                    : null,
-                onTap: () {
-                  ctrl.setLanguage('es');
-                  Navigator.of(ctx).pop();
-                },
-              ),
-              ListTile(
-                title: Text('French', style: TextStyle(color: textColor)),
-                trailing: ctrl.languageCode == 'fr'
-                    ? const Icon(Icons.check, color: Color(0xFFCCFF00))
-                    : null,
-                onTap: () {
-                  ctrl.setLanguage('fr');
-                  Navigator.of(ctx).pop();
-                },
-              ),
-              const SizedBox(height: 12),
-            ],
-          ),
-        );
-      },
     );
   }
 }
 
 class _SettingsTile extends StatelessWidget {
-  const _SettingsTile({
-    required this.title,
-    this.subtitle,
-    this.trailing,
-    this.onTap,
-  });
+  const _SettingsTile({required this.title, this.subtitle, this.trailing});
 
   final String title;
   final String? subtitle;
   final Widget? trailing;
-  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final textColor = isDark ? Colors.white : const Color(0xFF1A1A1A);
-    final subtitleColor = isDark ? Colors.white.withValues(alpha: 0.6) : const Color(0xFF6A6A6A);
+    final subtitleColor = isDark
+        ? Colors.white.withValues(alpha: 0.6)
+        : const Color(0xFF1A1A1A).withValues(alpha: 0.6);
 
     return GlassCard(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      onTap: onTap,
       child: Row(
         children: [
           Expanded(
@@ -244,7 +211,7 @@ class _SettingsTile extends StatelessWidget {
               ],
             ),
           ),
-          ?trailing,
+          if (trailing case final trailing?) trailing,
         ],
       ),
     );

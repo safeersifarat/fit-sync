@@ -23,6 +23,7 @@ class AuthScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: AuthBackground(
@@ -40,8 +41,12 @@ class AuthScaffold extends StatelessWidget {
                       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                       child: IconButton(
                         style: IconButton.styleFrom(
-                          backgroundColor: Colors.white.withValues(alpha: 0.1),
-                          foregroundColor: Colors.white,
+                          backgroundColor: isDark
+                              ? Colors.white.withValues(alpha: 0.1)
+                              : Colors.black.withValues(alpha: 0.07),
+                          foregroundColor: isDark
+                              ? Colors.white
+                              : Colors.black87,
                         ),
                         icon: const Icon(
                           Icons.arrow_back_ios_new_rounded,
@@ -134,6 +139,11 @@ class PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    const purple = Color(0xFF5B3FE8);
+    final bgColor = isDark ? kLimeAccent.withValues(alpha: 0.95) : purple;
+    final textColor = isDark ? Colors.black87 : Colors.white;
+
     return SizedBox(
       width: double.infinity,
       child: ClipRRect(
@@ -142,8 +152,8 @@ class PrimaryButton extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: kLimeAccent.withValues(alpha: 0.95),
-              foregroundColor: Colors.black87,
+              backgroundColor: bgColor,
+              foregroundColor: textColor,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
@@ -153,7 +163,8 @@ class PrimaryButton extends StatelessWidget {
             onPressed: onPressed,
             child: Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
+                color: textColor,
                 fontWeight: FontWeight.w600,
                 fontSize: 16,
                 letterSpacing: -0.3,
@@ -178,6 +189,12 @@ class SecondaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final fgColor = isDark ? Colors.white : Colors.black87;
+    final borderColor = isDark
+        ? Colors.white.withValues(alpha: 0.3)
+        : Colors.black.withValues(alpha: 0.15);
+
     return SizedBox(
       width: double.infinity,
       child: ClipRRect(
@@ -186,11 +203,8 @@ class SecondaryButton extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: OutlinedButton(
             style: OutlinedButton.styleFrom(
-              foregroundColor: Colors.white,
-              side: BorderSide(
-                color: Colors.white.withValues(alpha: 0.3),
-                width: 1.5,
-              ),
+              foregroundColor: fgColor,
+              side: BorderSide(color: borderColor, width: 1.5),
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
@@ -199,7 +213,8 @@ class SecondaryButton extends StatelessWidget {
             onPressed: onPressed,
             child: Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
+                color: fgColor,
                 fontWeight: FontWeight.w500,
                 fontSize: 16,
                 letterSpacing: -0.3,
@@ -234,6 +249,20 @@ class AuthTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    const purple = Color(0xFF5B3FE8);
+    final textColor = isDark ? Colors.white : Colors.black87;
+    final hintColor = isDark
+        ? Colors.white.withValues(alpha: 0.5)
+        : Colors.black.withValues(alpha: 0.4);
+    final fillColor = isDark
+        ? Colors.white.withValues(alpha: 0.1)
+        : Colors.black.withValues(alpha: 0.04);
+    final borderColor = isDark
+        ? Colors.white.withValues(alpha: 0.2)
+        : Colors.black.withValues(alpha: 0.15);
+    final focusedColor = isDark ? kLimeAccent.withValues(alpha: 0.6) : purple;
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: BackdropFilter(
@@ -253,36 +282,27 @@ class AuthTextField extends StatelessWidget {
               onSubmitted?.call();
             }
           },
-          style: const TextStyle(color: Colors.white, letterSpacing: -0.3),
+          style: TextStyle(color: textColor, letterSpacing: -0.3),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
+            hintStyle: TextStyle(color: hintColor),
             filled: true,
-            fillColor: Colors.white.withValues(alpha: 0.1),
+            fillColor: fillColor,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 20,
               vertical: 16,
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(
-                color: Colors.white.withValues(alpha: 0.2),
-                width: 1.5,
-              ),
+              borderSide: BorderSide(color: borderColor, width: 1.5),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(
-                color: Colors.white.withValues(alpha: 0.2),
-                width: 1.5,
-              ),
+              borderSide: BorderSide(color: borderColor, width: 1.5),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(
-                color: kLimeAccent.withValues(alpha: 0.6),
-                width: 2,
-              ),
+              borderSide: BorderSide(color: focusedColor, width: 2),
             ),
           ),
         ),

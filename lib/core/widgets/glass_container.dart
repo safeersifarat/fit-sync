@@ -12,6 +12,7 @@ class GlassContainer extends StatelessWidget {
     this.blur = 20.0,
     this.opacity,
     this.borderWidth = 1.5,
+    this.borderColor,
     this.onTap,
   });
 
@@ -22,6 +23,7 @@ class GlassContainer extends StatelessWidget {
   final double blur;
   final double? opacity;
   final double borderWidth;
+  final Color? borderColor;
   final VoidCallback? onTap;
 
   @override
@@ -29,8 +31,7 @@ class GlassContainer extends StatelessWidget {
     final brightness = Theme.of(context).brightness;
     final isDark = brightness == Brightness.dark;
     final baseOpacity = opacity ?? (isDark ? 0.15 : 0.25);
-    final glassColor = isDark ? Colors.white : Colors.black;
-    final borderColor = isDark ? Colors.white : Colors.black;
+    final themeBorderColor = isDark ? Colors.white : Colors.black;
     final shadowColor = isDark ? Colors.black : Colors.white;
 
     final container = ClipRRect(
@@ -45,13 +46,19 @@ class GlassContainer extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                glassColor.withValues(alpha: baseOpacity),
-                glassColor.withValues(alpha: baseOpacity * 0.3),
+                (isDark ? Colors.white : Colors.white).withValues(
+                  alpha: baseOpacity,
+                ),
+                (isDark ? Colors.white : Colors.white).withValues(
+                  alpha: baseOpacity * 0.3,
+                ),
               ],
             ),
             borderRadius: borderRadius ?? BorderRadius.circular(24),
             border: Border.all(
-              color: borderColor.withValues(alpha: isDark ? 0.2 : 0.15),
+              color:
+                  borderColor ??
+                  themeBorderColor.withValues(alpha: isDark ? 0.2 : 0.15),
               width: borderWidth,
             ),
             boxShadow: [

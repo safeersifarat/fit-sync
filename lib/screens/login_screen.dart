@@ -25,8 +25,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    const purple = Color(0xFF5B3FE8);
     return AuthScaffold(
       title: 'Welcome back!\nGlad to see you, again!',
+      showBack: false,
       children: [
         AuthTextField(
           hint: 'Email',
@@ -52,7 +55,9 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Text(
               'Forgot Password?',
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.8),
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.8)
+                    : Colors.black54,
                 decoration: TextDecoration.underline,
                 fontSize: 13,
                 letterSpacing: -0.2,
@@ -77,7 +82,9 @@ class _LoginScreenState extends State<LoginScreen> {
             Text(
               "Don't have an account? ",
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.7),
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.7)
+                    : Colors.black54,
                 letterSpacing: -0.2,
               ),
             ),
@@ -88,10 +95,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   MaterialPageRoute(builder: (_) => const RegisterScreen()),
                 );
               },
-              child: const Text(
+              child: Text(
                 'Register now',
                 style: TextStyle(
-                  color: kLimeAccent,
+                  color: isDark ? kLimeAccent : purple,
                   fontWeight: FontWeight.w600,
                   letterSpacing: -0.3,
                 ),
