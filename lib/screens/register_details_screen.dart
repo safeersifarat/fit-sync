@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import '../services/user_service.dart';
 import '../widgets/auth_widgets.dart';
-import 'home_shell.dart';
+import 'home_page.dart';
 
 class RegisterDetailsScreen extends StatefulWidget {
   final String name;

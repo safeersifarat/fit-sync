@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-import '../state/onboarding_controller.dart';
-import '../state/auth_controller.dart';
+import '../controllers/profile_controller.dart';
+import '../controllers/auth_controller.dart';
 import '../widgets/auth_background.dart';
 import '../core/widgets/loading_overlay.dart';
 import '../core/error/app_exception.dart';
@@ -35,15 +35,39 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    final ctrl = context.read<OnboardingController>();
-    _nameController = TextEditingController(text: ctrl.displayName);
-    _ageController = TextEditingController(text: ctrl.age.toString());
-    _weightController = TextEditingController(
-      text: ctrl.weight.toStringAsFixed(1),
-    );
-    _heightController = TextEditingController(
-      text: ctrl.height.toStringAsFixed(1),
-    );
+    _nameController = TextEditingController();
+    _ageController = TextEditingController();
+    _weightController = TextEditingController();
+    _heightController = TextEditingController();
+
+    // Fetch latest profile data
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadProfileData();
+    });
+  }
+
+  Future<void> _loadProfileData() async {
+    final ctrl = context.read<ProfileController>();
+    try {
+      await ctrl.loadProfile();
+    } catch (e) {
+      if (mounted) _showSnack('Failed to load profile: $e');
+      return;
+    }
+
+    if (!mounted) return;
+
+    if (ctrl.error != null) {
+      _showSnack('Profile error: ${ctrl.error}');
+    }
+
+    final profileData = ctrl.profileData ?? {};
+    setState(() {
+      _nameController.text = profileData['name'] ?? '';
+      _ageController.text = profileData['age']?.toString() ?? '';
+      _weightController.text = (profileData['weight'] as num?)?.toStringAsFixed(1) ?? '';
+      _heightController.text = (profileData['height'] as num?)?.toStringAsFixed(1) ?? '';
+    });
   }
 
   @override
@@ -159,7 +183,7 @@ class _ProfilePageState extends State<ProfilePage> {
         return;
       }
 
-      await context.read<OnboardingController>().setAvatarPath(picked.path);
+      await context.read<ProfileController>().updateProfile({'avatarUrl': picked.path});
       if (mounted) {
         setState(() => _isPickingImage = false);
       }
@@ -182,20 +206,30 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() => _isSaving = true);
 
     try {
-      final ctrl = context.read<OnboardingController>();
+      final ctrl = context.read<ProfileController>();
 
-      await ctrl.setDisplayName(_nameController.text.trim());
-      await ctrl.setAge(int.tryParse(_ageController.text.trim()) ?? ctrl.age);
+      // Include gender from existing profile so backend can recalculate BMR
+      final existingGender = ctrl.profileData?['gender'] as String?;
+
+      final data = <String, dynamic>{
+        'name': _nameController.text.trim(),
+        'gender': ?existingGender,
+      };
+
+      final age = int.tryParse(_ageController.text.trim());
+      if (age != null) data['age'] = age;
 
       final weightValue = double.tryParse(_weightController.text.trim());
       if (weightValue != null && weightValue > 0) {
-        await ctrl.setWeight(weightValue);
+        data['weight'] = weightValue;
       }
 
       final heightValue = double.tryParse(_heightController.text.trim());
       if (heightValue != null && heightValue > 0) {
-        await ctrl.setHeight(heightValue);
+        data['height'] = heightValue;
       }
+
+      await ctrl.updateProfile(data);
 
       if (mounted) {
         Navigator.of(context).pop();
@@ -298,46 +332,31 @@ class _ProfilePageState extends State<ProfilePage> {
                         'Change Password',
                         style: TextStyle(color: textColor),
                       ),
-                      trailing: Icon(
-                        Icons.chevron_right,
-                        color: chevronColor,
-                      ),
+                      trailing: Icon(Icons.chevron_right, color: chevronColor),
                       onTap: () {
                         Navigator.pop(ctx);
                         _showChangePasswordSheet();
                       },
                     ),
                     ListTile(
-                      leading: Icon(
-                        Icons.email_outlined,
-                        color: iconColor,
-                      ),
+                      leading: Icon(Icons.email_outlined, color: iconColor),
                       title: Text(
                         'Change Email',
                         style: TextStyle(color: textColor),
                       ),
-                      trailing: Icon(
-                        Icons.chevron_right,
-                        color: chevronColor,
-                      ),
+                      trailing: Icon(Icons.chevron_right, color: chevronColor),
                       onTap: () {
                         Navigator.pop(ctx);
                         _showChangeEmailSheet();
                       },
                     ),
                     ListTile(
-                      leading: Icon(
-                        Icons.phone_outlined,
-                        color: iconColor,
-                      ),
+                      leading: Icon(Icons.phone_outlined, color: iconColor),
                       title: Text(
                         'Change Phone Number',
                         style: TextStyle(color: textColor),
                       ),
-                      trailing: Icon(
-                        Icons.chevron_right,
-                        color: chevronColor,
-                      ),
+                      trailing: Icon(Icons.chevron_right, color: chevronColor),
                       onTap: () {
                         Navigator.pop(ctx);
                         _showChangePhoneSheet();
@@ -382,6 +401,7 @@ class _ProfilePageState extends State<ProfilePage> {
       },
     );
   }
+
   // ── Change Password Sheet ──
   void _showChangePasswordSheet() {
     final oldPassCtrl = TextEditingController();
@@ -392,12 +412,24 @@ class _ProfilePageState extends State<ProfilePage> {
       title: 'Change Password',
       icon: Icons.lock_outline,
       fields: [
-        _GlassFieldConfig(controller: oldPassCtrl, hint: 'Current Password', obscure: true),
-        _GlassFieldConfig(controller: newPassCtrl, hint: 'New Password', obscure: true),
-        _GlassFieldConfig(controller: confirmPassCtrl, hint: 'Confirm New Password', obscure: true),
+        _GlassFieldConfig(
+          controller: oldPassCtrl,
+          hint: 'Current Password',
+          obscure: true,
+        ),
+        _GlassFieldConfig(
+          controller: newPassCtrl,
+          hint: 'New Password',
+          obscure: true,
+        ),
+        _GlassFieldConfig(
+          controller: confirmPassCtrl,
+          hint: 'Confirm New Password',
+          obscure: true,
+        ),
       ],
       buttonLabel: 'Update Password',
-      onSubmit: () {
+      onSubmit: () async {
         final oldPass = oldPassCtrl.text.trim();
         final newPass = newPassCtrl.text.trim();
         final confirm = confirmPassCtrl.text.trim();
@@ -415,8 +447,14 @@ class _ProfilePageState extends State<ProfilePage> {
           return false;
         }
 
-        _showSnack('Password updated successfully', isSuccess: true);
-        return true;
+        try {
+          await context.read<ProfileController>().changePassword(oldPass, newPass);
+          _showSnack('Password updated successfully', isSuccess: true);
+          return true;
+        } catch (e) {
+          _showSnack(e.toString());
+          return false;
+        }
       },
       onDispose: () {
         oldPassCtrl.dispose();
@@ -428,20 +466,28 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // ── Change Email Sheet ──
   void _showChangeEmailSheet() {
-    final ctrl = context.read<OnboardingController>();
+    final ctrl = context.read<ProfileController>();
     final newEmailCtrl = TextEditingController();
     final passwordCtrl = TextEditingController();
 
     _showGlassFormSheet(
       title: 'Change Email',
       icon: Icons.email_outlined,
-      subtitle: 'Current: ${ctrl.email ?? "Not set"}',
+      subtitle: 'Current: ${ctrl.profileData?['email'] ?? "Not set"}',
       fields: [
-        _GlassFieldConfig(controller: newEmailCtrl, hint: 'New Email', type: TextInputType.emailAddress),
-        _GlassFieldConfig(controller: passwordCtrl, hint: 'Confirm Password', obscure: true),
+        _GlassFieldConfig(
+          controller: newEmailCtrl,
+          hint: 'New Email',
+          type: TextInputType.emailAddress,
+        ),
+        _GlassFieldConfig(
+          controller: passwordCtrl,
+          hint: 'Confirm Password',
+          obscure: true,
+        ),
       ],
       buttonLabel: 'Update Email',
-      onSubmit: () {
+      onSubmit: () async {
         final email = newEmailCtrl.text.trim();
         final password = passwordCtrl.text.trim();
 
@@ -454,8 +500,14 @@ class _ProfilePageState extends State<ProfilePage> {
           return false;
         }
 
-        _showSnack('Email updated successfully', isSuccess: true);
-        return true;
+        try {
+          await context.read<ProfileController>().changeEmail(email, password);
+          _showSnack('Email updated successfully', isSuccess: true);
+          return true;
+        } catch (e) {
+          _showSnack(e.toString());
+          return false;
+        }
       },
       onDispose: () {
         newEmailCtrl.dispose();
@@ -466,18 +518,22 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // ── Change Phone Sheet ──
   void _showChangePhoneSheet() {
-    final ctrl = context.read<OnboardingController>();
+    final ctrl = context.read<ProfileController>();
     final newPhoneCtrl = TextEditingController();
 
     _showGlassFormSheet(
       title: 'Change Phone Number',
       icon: Icons.phone_outlined,
-      subtitle: 'Current: ${ctrl.phoneNumber ?? "Not set"}',
+      subtitle: 'Current: ${ctrl.profileData?['phone'] ?? "Not set"}',
       fields: [
-        _GlassFieldConfig(controller: newPhoneCtrl, hint: 'New Phone Number', type: TextInputType.phone),
+        _GlassFieldConfig(
+          controller: newPhoneCtrl,
+          hint: 'New Phone Number',
+          type: TextInputType.phone,
+        ),
       ],
       buttonLabel: 'Update Phone',
-      onSubmit: () {
+      onSubmit: () async {
         final phone = newPhoneCtrl.text.trim();
 
         if (phone.isEmpty) {
@@ -489,8 +545,14 @@ class _ProfilePageState extends State<ProfilePage> {
           return false;
         }
 
-        _showSnack('Phone number updated successfully', isSuccess: true);
-        return true;
+        try {
+          await context.read<ProfileController>().changePhone(phone);
+          _showSnack('Phone number updated successfully', isSuccess: true);
+          return true;
+        } catch (e) {
+          _showSnack(e.toString());
+          return false;
+        }
       },
       onDispose: () {
         newPhoneCtrl.dispose();
@@ -517,7 +579,7 @@ class _ProfilePageState extends State<ProfilePage> {
     String? subtitle,
     required List<_GlassFieldConfig> fields,
     required String buttonLabel,
-    required bool Function() onSubmit,
+    required Future<bool> Function() onSubmit,
     required VoidCallback onDispose,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -638,17 +700,19 @@ class _ProfilePageState extends State<ProfilePage> {
                         const SizedBox(height: 24),
 
                         // Fields
-                        ...fields.map((f) => Padding(
-                              padding: const EdgeInsets.only(bottom: 14),
-                              child: _buildGlassTextField(
-                                controller: f.controller,
-                                hint: f.hint,
-                                obscure: f.obscure,
-                                keyboardType: f.type,
-                                isDark: isDark,
-                                accentColor: accentColor,
-                              ),
-                            )),
+                        ...fields.map(
+                          (f) => Padding(
+                            padding: const EdgeInsets.only(bottom: 14),
+                            child: _buildGlassTextField(
+                              controller: f.controller,
+                              hint: f.hint,
+                              obscure: f.obscure,
+                              keyboardType: f.type,
+                              isDark: isDark,
+                              accentColor: accentColor,
+                            ),
+                          ),
+                        ),
 
                         const SizedBox(height: 8),
 
@@ -661,16 +725,22 @@ class _ProfilePageState extends State<ProfilePage> {
                               filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: accentColor.withValues(alpha: isDark ? 0.9 : 1.0),
-                                  foregroundColor: isDark ? Colors.black87 : Colors.white,
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                  backgroundColor: accentColor.withValues(
+                                    alpha: isDark ? 0.9 : 1.0,
+                                  ),
+                                  foregroundColor: isDark
+                                      ? Colors.black87
+                                      : Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30),
                                   ),
                                   elevation: 0,
                                 ),
-                                onPressed: () {
-                                  if (onSubmit()) {
+                                onPressed: () async {
+                                  if (await onSubmit()) {
                                     Navigator.pop(ctx);
                                     onDispose();
                                   }
@@ -746,15 +816,16 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: accentColor.withValues(alpha: 0.6), width: 2),
+              borderSide: BorderSide(
+                color: accentColor.withValues(alpha: 0.6),
+                width: 2,
+              ),
             ),
           ),
         ),
       ),
     );
   }
-
-
 
   Future<void> _logout() async {
     final isDarkDialog = Theme.of(context).brightness == Brightness.dark;
@@ -796,10 +867,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             content: Text(
               'You\'ll be signed out of your account.',
-              style: TextStyle(
-                color: contentColor,
-                fontSize: 14,
-              ),
+              style: TextStyle(color: contentColor, fontSize: 14),
             ),
             actions: [
               TextButton(
@@ -841,15 +909,15 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = context.watch<OnboardingController>();
-    final avatarPath = ctrl.avatarPath;
+    final ctrl = context.watch<ProfileController>();
+    final avatarPath = ctrl.profileData?['avatarUrl'] as String?;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     const purple = Color(0xFF5B3FE8);
     const accentGreen = Color(0xFFCCFF00);
 
     return LoadingOverlay(
-      isLoading: _isSaving || _isPickingImage,
-      message: _isSaving ? 'Saving...' : 'Loading image...',
+      isLoading: _isSaving || _isPickingImage || ctrl.isLoading,
+      message: ctrl.isLoading ? 'Loading profile...' : (_isSaving ? 'Saving...' : 'Loading image...'),
       child: AuthBackground(
         child: Scaffold(
           backgroundColor: Colors.transparent,
@@ -862,7 +930,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   : Colors.black87,
             ),
             title: Text(
-              'Account Informations',
+              'Profile Informations',
               style: TextStyle(
                 color: Theme.of(context).brightness == Brightness.dark
                     ? Colors.white

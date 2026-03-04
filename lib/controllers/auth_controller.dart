@@ -1,7 +1,7 @@
+// auth_controller.dart
 import 'package:flutter/material.dart';
 import '../core/storage/storage_service.dart';
 import '../services/auth_service.dart';
-
 
 class AuthController extends ChangeNotifier {
   final AuthService _authService = AuthService();
@@ -19,14 +19,16 @@ class AuthController extends ChangeNotifier {
 
   Future<void> initialize() async {
     final storage = await StorageService.getInstance();
-    _token = storage.getLanguageCode(); // TEMP reuse until we add token key
+    _token = storage.getAuthToken();
+
     if (_token != null) {
       _isAuthenticated = true;
+    } else {
+      _isAuthenticated = false;
     }
+
     notifyListeners();
   }
-
-
 
   Future<void> register(String email, String password, String name) async {
     try {
@@ -88,6 +90,4 @@ class AuthController extends ChangeNotifier {
 
     notifyListeners();
   }
-
-  
 }

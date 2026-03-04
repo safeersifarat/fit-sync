@@ -1,14 +1,9 @@
+//auth_service.dart
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  static String get baseUrl {
-    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-      return "http://10.0.2.2:5001/api/auth";
-    }
-    return "http://127.0.0.1:5001/api/auth";
-  }
+  static const String baseUrl = "http://192.168.1.71:5000/api/auth";
 
   Future<Map<String, dynamic>> register({
     required String email,
@@ -49,9 +44,7 @@ class AuthService {
     }
   }
 
-  Future<Map<String, dynamic>> forgotPassword({
-    required String email,
-  }) async {
+  Future<Map<String, dynamic>> forgotPassword({required String email}) async {
     final response = await http.post(
       Uri.parse("$baseUrl/forgot-password"),
       headers: {"Content-Type": "application/json"},

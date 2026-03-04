@@ -1,15 +1,13 @@
 import 'dart:io';
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../state/onboarding_controller.dart';
+import '../controllers/profile_controller.dart';
 import '../widgets/auth_background.dart';
 import '../core/widgets/glass_container.dart';
 import '../core/theme/app_theme.dart';
 import '../core/theme/theme_controller.dart';
-import 'app_settings_page.dart';
+import 'notification_page.dart';
 import 'profile_page.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -17,9 +15,13 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = context.watch<OnboardingController>();
+    final ctrl = context.watch<ProfileController>();
     final themeController = context.watch<ThemeController>();
-    final avatarPath = ctrl.avatarPath;
+    final profileData = ctrl.profileData ?? {};
+    final avatarPath = profileData['avatarUrl'] as String?;
+    final name = profileData['name'] as String? ?? 'User';
+    final height = (profileData['height'] as num?)?.toDouble() ?? 170.0;
+    final weight = (profileData['weight'] as num?)?.toDouble() ?? 70.0;
 
     return AuthBackground(
       child: Scaffold(
@@ -31,11 +33,11 @@ class SettingsPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _ProfileHeader(
-                  name: ctrl.displayName,
-                  height: ctrl.height,
-                  weight: ctrl.weight,
-                  useMetricHeight: ctrl.useMetricHeight,
-                  useMetricWeight: ctrl.useMetricWeight,
+                  name: name,
+                  height: height,
+                  weight: weight,
+                  useMetricHeight: true,
+                  useMetricWeight: true,
                   avatarPath: avatarPath,
                   onEditAvatar: () => _onEditAvatar(context),
                 ),
@@ -45,7 +47,7 @@ class SettingsPage extends StatelessWidget {
                 _SettingsCard(
                   children: [
                     _SettingsRow(
-                      title: 'Account Informations',
+                      title: 'Profile Informations',
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
@@ -81,7 +83,7 @@ class SettingsPage extends StatelessWidget {
                           final isDark =
                               Theme.of(context).brightness == Brightness.dark;
                           return Switch(
-                            value: ctrl.darkModeEnabled,
+                            value: themeController.isDarkMode,
                             activeThumbColor: isDark
                                 ? Colors.black
                                 : Colors.white,
@@ -91,10 +93,7 @@ class SettingsPage extends StatelessWidget {
                             inactiveThumbColor: Colors.white,
                             inactiveTrackColor: Colors.white24,
                             onChanged: (val) async {
-                              await ctrl.toggleDarkMode();
-                              themeController.syncWithOnboarding(
-                                ctrl.darkModeEnabled,
-                              );
+                              await themeController.setDarkMode(val);
                             },
                           );
                         },

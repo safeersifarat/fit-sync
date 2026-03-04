@@ -211,7 +211,7 @@ class _SettingsTile extends StatelessWidget {
               ],
             ),
           ),
-          if (trailing case final trailing?) trailing,
+          ?trailing,
         ],
       ),
     );

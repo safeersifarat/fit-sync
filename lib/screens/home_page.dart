@@ -1,16 +1,18 @@
-// home_shell.dart
+// home_page.dart
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../state/onboarding_controller.dart';
+import '../controllers/profile_controller.dart';
+import '../controllers/workout_controller.dart';
 import '../widgets/auth_background.dart';
 import 'ai_agent_page.dart';
 import 'settings_page.dart';
 import 'statistics_page.dart';
+import 'profile_page.dart';
+import '../workout/camera/workout_camera_page.dart';
 
 // ─────────────────────────────────────────────
 //  Data model for a single journey day
@@ -28,26 +30,6 @@ class JourneyDay {
 // ─────────────────────────────────────────────
 //  Dummy data: 6 completed, 1 current, rest locked
 // ─────────────────────────────────────────────
-List<JourneyDay> _buildDays() {
-  final days = <JourneyDay>[];
-  const completedStars = [3, 2, 3, 1, 2, 3];
-  for (int i = 1; i <= 90; i++) {
-    if (i <= 6) {
-      days.add(
-        JourneyDay(
-          day: i,
-          state: DayState.completed,
-          stars: completedStars[i - 1],
-        ),
-      );
-    } else if (i == 7) {
-      days.add(JourneyDay(day: i, state: DayState.current, stars: 0));
-    } else {
-      days.add(JourneyDay(day: i, state: DayState.locked, stars: 0));
-    }
-  }
-  return days;
-}
 
 // ─────────────────────────────────────────────
 //  Shell (replaces old HomeShell)
@@ -63,7 +45,7 @@ class _HomeShellState extends State<HomeShell> with TickerProviderStateMixin {
   // ── Tab state
   int _tabIndex = 0;
 
-  final List<JourneyDay> _days = _buildDays();
+  List<JourneyDay> _days = [];
   late final ScrollController _scroll;
   late final AnimationController _pulseCtrl;
   late final AnimationController _floatCtrl;
@@ -76,9 +58,29 @@ class _HomeShellState extends State<HomeShell> with TickerProviderStateMixin {
   late final AnimationController _shakeCtrl;
   late final Animation<double> _shakeAnim;
 
+  void _buildDaysFromBackend(WorkoutController ctrl) {
+    final days = <JourneyDay>[];
+
+    for (int i = 1; i <= ctrl.totalDays; i++) {
+      if (ctrl.completedDays.contains(i)) {
+        days.add(JourneyDay(day: i, state: DayState.completed, stars: 3));
+      } else if (i == ctrl.currentDay) {
+        days.add(JourneyDay(day: i, state: DayState.current));
+      } else {
+        days.add(JourneyDay(day: i, state: DayState.locked));
+      }
+    }
+
+    _days = days;
+  }
+
   @override
   void initState() {
     super.initState();
+
+    Future.microtask(() {
+      context.read<WorkoutController>().loadJourney();
+    });
     _scroll = ScrollController();
 
     _pulseCtrl = AnimationController(
@@ -238,7 +240,15 @@ class _HomeShellState extends State<HomeShell> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final name = context.watch<OnboardingController>().displayName;
+    final profileData = context.watch<ProfileController>().profileData;
+    final name = profileData?['name'] ?? 'User';
+    final workoutCtrl = context.watch<WorkoutController>();
+
+    if (workoutCtrl.isLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    _buildDaysFromBackend(workoutCtrl);
     return Scaffold(
       backgroundColor: Colors.transparent,
       extendBody: true,
@@ -278,7 +288,12 @@ class _HomeShellState extends State<HomeShell> with TickerProviderStateMixin {
             bottom: 0,
             child: _BottomNavBar(
               currentIndex: _tabIndex,
-              onChanged: (i) => setState(() => _tabIndex = i),
+              onChanged: (i) {
+                if (i == 0 && _tabIndex != 0) {
+                  _scrollToCurrentDay();
+                }
+                setState(() => _tabIndex = i);
+              },
             ),
           ),
         ],
@@ -571,8 +586,8 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = context.watch<OnboardingController>();
-    final avatarPath = ctrl.avatarPath;
+    final ctrl = context.watch<ProfileController>();
+    final avatarPath = ctrl.profileData?['avatarUrl'] as String?;
     // Header is always on the coloured gradient background,
     // so text is always white regardless of theme.
 
@@ -651,9 +666,9 @@ class _Header extends StatelessWidget {
                             size: 18,
                           ),
                           const SizedBox(width: 4),
-                          const Text(
-                            '12',
-                            style: TextStyle(
+                          Text(
+                            '${context.watch<WorkoutController>().streak}',
+                            style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w800,
                               fontSize: 14,
@@ -664,37 +679,50 @@ class _Header extends StatelessWidget {
                     ),
                     const SizedBox(width: 6),
                     // Profile avatar
-                    ClipOval(
-                      child: Container(
-                        height: 36,
-                        width: 36,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.8),
-                            width: 2,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ProfilePage(),
                           ),
-                        ),
-                        child: ClipOval(
-                          child: avatarPath != null
-                              ? Image.file(File(avatarPath), fit: BoxFit.cover)
-                              : Container(
-                                  decoration: const BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        Color(0xFF9B7AF8),
-                                        Color(0xFF5B3FE8),
-                                      ],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
+                        );
+                      },
+                      child: ClipOval(
+                        child: Container(
+                          height: 36,
+                          width: 36,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.8),
+                              width: 2,
+                            ),
+                          ),
+                          child: ClipOval(
+                            child: avatarPath != null
+                                ? Image.file(
+                                    File(avatarPath),
+                                    fit: BoxFit.cover,
+                                  )
+                                : Container(
+                                    decoration: const BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Color(0xFF9B7AF8),
+                                          Color(0xFF5B3FE8),
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                      ),
+                                    ),
+                                    child: const Icon(
+                                      Icons.person_rounded,
+                                      color: Colors.white,
+                                      size: 20,
                                     ),
                                   ),
-                                  child: const Icon(
-                                    Icons.person_rounded,
-                                    color: Colors.white,
-                                    size: 20,
-                                  ),
-                                ),
+                          ),
                         ),
                       ),
                     ),
@@ -779,6 +807,8 @@ class _JourneyPath extends StatelessWidget {
                         xFor: (i) => _xFor(i, halfWidth),
                         yFor: (i) => _yFor(i, days.length.toDouble()),
                         nodeHeight: kNodeHeight,
+                        currentDayIndex:
+                            context.watch<WorkoutController>().currentDay - 1,
                       ),
                     ),
                   ),
@@ -787,8 +817,13 @@ class _JourneyPath extends StatelessWidget {
                   for (int i = 0; i < days.length; i++)
                     ..._buildNode(i, days[i], halfWidth, n),
 
-                  // ── Mascot near current day (index 6 = Day 7)
-                  _buildMascot(6, halfWidth, constraints.maxWidth, n),
+                  // ── Mascot near current day
+                  _buildMascot(
+                    context.watch<WorkoutController>().currentDay - 1,
+                    halfWidth,
+                    constraints.maxWidth,
+                    n,
+                  ),
                 ],
               ),
             ),
@@ -838,7 +873,7 @@ class _JourneyPath extends StatelessWidget {
                 Transform.scale(scale: pulseAnim.value, child: child),
             child: GestureDetector(
               onTap: () => onDayTap(day),
-              child: const _CurrentNode(),
+              child: _CurrentNode(day: day.day),
             ),
           ),
         ),
@@ -878,7 +913,7 @@ class _JourneyPath extends StatelessWidget {
           offset: Offset(0, floatAnim.value),
           child: child,
         ),
-        child: const _MascotWidget(),
+        child: _MascotWidget(day: nearIndex + 1),
       ),
     );
   }
@@ -892,18 +927,18 @@ class _PathLinePainter extends CustomPainter {
   final double Function(int) xFor;
   final double Function(int) yFor; // ← now injected (bottom-to-top)
   final double nodeHeight;
+  final int currentDayIndex;
 
   const _PathLinePainter({
     required this.days,
     required this.xFor,
     required this.yFor,
     required this.nodeHeight,
+    required this.currentDayIndex,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
-    const currentDayIndex = 6; // Day 7 is last completed/current
-
     // Build the full path using flipped y (Day 1 at bottom, Day 90 at top)
     final path = Path();
     for (int i = 0; i < days.length; i++) {
@@ -1043,7 +1078,8 @@ class _CompletedNode extends StatelessWidget {
 }
 
 class _CurrentNode extends StatelessWidget {
-  const _CurrentNode();
+  const _CurrentNode({required this.day});
+  final int day;
 
   @override
   Widget build(BuildContext context) {
@@ -1083,9 +1119,9 @@ class _CurrentNode extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'Day 7',
-                  style: TextStyle(
+                Text(
+                  'Day $day',
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w900,
                     fontSize: 12,
@@ -1189,7 +1225,8 @@ class _LockedNode extends StatelessWidget {
 //  Mascot widget
 // ─────────────────────────────────────────────
 class _MascotWidget extends StatelessWidget {
-  const _MascotWidget();
+  const _MascotWidget({required this.day});
+  final int day;
 
   @override
   Widget build(BuildContext context) {
@@ -1209,9 +1246,9 @@ class _MascotWidget extends StatelessWidget {
               ),
             ],
           ),
-          child: const Text(
-            'Day 7 ready! 💪',
-            style: TextStyle(
+          child: Text(
+            'Day $day ready! 💪',
+            style: const TextStyle(
               color: Color(0xFF1A2A1E),
               fontSize: 11,
               fontWeight: FontWeight.w700,
@@ -1343,13 +1380,38 @@ class _MascotPainter extends CustomPainter {
 // ─────────────────────────────────────────────
 //  Bottom sheets
 // ─────────────────────────────────────────────
-class _StartWorkoutSheet extends StatelessWidget {
+class _StartWorkoutSheet extends StatefulWidget {
   const _StartWorkoutSheet({required this.day});
   final JourneyDay day;
 
   @override
+  State<_StartWorkoutSheet> createState() => _StartWorkoutSheetState();
+}
+
+class _StartWorkoutSheetState extends State<_StartWorkoutSheet> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      context.read<WorkoutController>().loadTodayWorkout();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final bottomPad = MediaQuery.of(context).viewInsets.bottom;
+    final ctrl = context.watch<WorkoutController>();
+
+    List<dynamic> exercises = [];
+    if (ctrl.todayWorkout != null && ctrl.todayWorkout!['exercises'] != null) {
+      final String exStr = ctrl.todayWorkout!['exercises'];
+      try {
+        exercises = jsonDecode(exStr);
+      } catch (e) {
+        // Fallback or leave empty
+      }
+    }
+
     return SafeArea(
       top: false,
       child: Padding(
@@ -1394,9 +1456,9 @@ class _StartWorkoutSheet extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        const Text(
-                          '🏋️ Day 7 Workout',
-                          style: TextStyle(
+                        Text(
+                          '🏋️ Day ${widget.day.day} Workout',
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 20,
                             fontWeight: FontWeight.w800,
@@ -1404,31 +1466,50 @@ class _StartWorkoutSheet extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         const Text(
-                          'Full Body Strength • 45 mins',
+                          'Today\'s Plan',
                           style: TextStyle(color: Colors.white60, fontSize: 13),
                         ),
                         const SizedBox(height: 4),
-                        _SheetWorkoutRow(
-                          icon: '💪',
-                          label: 'Push Ups',
-                          detail: '3 sets × 15',
-                          onStart: () => Navigator.of(context).pop(),
-                        ),
-                        const SizedBox(height: 8),
-                        _SheetWorkoutRow(
-                          icon: '🦵',
-                          label: 'Squats',
-                          detail: '3 sets × 12',
-                          onStart: () => Navigator.of(context).pop(),
-                        ),
-                        const SizedBox(height: 8),
-                        _SheetWorkoutRow(
-                          icon: '🏃',
-                          label: 'Lunges',
-                          detail: '3 sets × 10',
-                          onStart: () => Navigator.of(context).pop(),
-                        ),
-                        const SizedBox(height: 8),
+
+                        if (ctrl.isLoading)
+                          const Padding(
+                            padding: EdgeInsets.all(32.0),
+                            child: CircularProgressIndicator(
+                              color: Color(0xFFCCFF00),
+                            ),
+                          )
+                        else if (exercises.isEmpty)
+                          const Padding(
+                            padding: EdgeInsets.all(32.0),
+                            child: Text(
+                              'No exercises found for today.',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          )
+                        else
+                          ...exercises.map((ex) {
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: _SheetWorkoutRow(
+                                icon:
+                                    '💪', // Placeholder, map logic based on body part if needed
+                                label: ex['name'] ?? 'Exercise',
+                                detail:
+                                    '${ex['sets'] ?? 3} sets × ${ex['reps'] ?? 10}',
+                                onStart: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => WorkoutCameraPage(
+                                        exerciseName: "pushups",
+                                        targetReps: 15,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          }),
                       ],
                     ),
                   ),

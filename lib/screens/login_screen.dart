@@ -2,8 +2,10 @@
 import 'package:flutter/material.dart';
 import '../widgets/auth_widgets.dart';
 import 'register_screen.dart';
-import 'home_shell.dart';
+import 'home_page.dart';
 import 'forget_password.dart';
+import 'package:provider/provider.dart';
+import '../controllers/auth_controller.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,12 +17,47 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  String? _error;
+  bool _isLoading = false;
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _handleLogin() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      setState(() => _error = "Please enter email and password");
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+
+    final auth = context.read<AuthController>();
+    await auth.login(email, password);
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (!mounted) return;
+
+    if (auth.isAuthenticated) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const HomeShell()),
+      );
+    } else {
+      setState(() => _error = auth.error ?? "Login failed");
+    }
   }
 
   @override
@@ -66,14 +103,13 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         const SizedBox(height: 8),
+        if (_error != null) ...[
+          const SizedBox(height: 8),
+          Text(_error!, style: const TextStyle(color: Colors.red)),
+        ],
         PrimaryButton(
-          label: 'Login',
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const HomeShell()),
-            );
-          },
+          label: _isLoading ? 'Logging in...' : 'Login',
+          onPressed: _isLoading ? null : _handleLogin,
         ),
         const SizedBox(height: 16),
         Row(
