@@ -63,11 +63,4 @@ class ThemeController extends ChangeNotifier {
     }
   }
 
-  /// Sync with OnboardingController's darkModeEnabled
-  void syncWithOnboarding(bool darkModeEnabled) {
-    if (_isDarkMode != darkModeEnabled) {
-      _isDarkMode = darkModeEnabled;
-      notifyListeners();
-    }
-  }
 }

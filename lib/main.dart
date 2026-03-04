@@ -1,11 +1,13 @@
 //main.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'state/auth_controller.dart';
+import 'controllers/auth_controller.dart';
 import 'screens/splash_screen.dart';
-import 'state/calorie_tracker_controller.dart';
-import 'state/onboarding_controller.dart';
+import 'controllers/profile_controller.dart';
 import 'core/theme/theme_controller.dart';
+import 'controllers/workout_controller.dart';
+import 'controllers/stats_controller.dart';
+import 'controllers/ai_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,22 +23,17 @@ class FitSyncApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeController()..initialize()),
         ChangeNotifierProvider(
-          create: (_) => OnboardingController()..initialize(),
+          create: (_) => ProfileController()..loadProfile(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => CalorieTrackerController()..initialize(),
-        ),
-        ChangeNotifierProvider(create: (_) => AuthController()..initialize()),
+        ChangeNotifierProvider(create: (_) => AuthController()),
+        ChangeNotifierProvider(create: (_) => WorkoutController()),
+        ChangeNotifierProvider(create: (_) => StatsController()),
+        ChangeNotifierProvider(create: (_) => AiController()),
       ],
-      child: Consumer2<ThemeController, OnboardingController>(
-        builder: (context, themeController, onboardingController, _) {
-          // Sync theme with onboarding controller
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            themeController.syncWithOnboarding(
-              onboardingController.darkModeEnabled,
-            );
-          });
-
+      child: Builder(
+        builder: (context) {
+          final themeController = context.watch<ThemeController>();
+          
           return MaterialApp(
             title: 'Fit Sync',
             debugShowCheckedModeBanner: false,

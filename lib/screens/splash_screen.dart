@@ -1,6 +1,10 @@
+// splash_screen.dart
 import 'package:flutter/material.dart';
 import '../widgets/auth_background.dart';
 import 'login_screen.dart';
+import 'package:provider/provider.dart';
+import '../controllers/auth_controller.dart';
+import 'home_page.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -95,6 +99,39 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _startAnimations() async {
+    // 🔥 Initialize authentication early
+    final auth = context.read<AuthController>();
+    await auth.initialize();
+
+    if (!mounted) return;
+
+    if (auth.isAuthenticated) {
+      // Fast path if already logged in - short delay for smooth transition
+      _logoController.value = 1.0;
+      _fadeController.value = 1.0;
+      await Future.delayed(const Duration(milliseconds: 400));
+      
+      if (!mounted) return;
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const HomeShell(),
+          transitionDuration: const Duration(milliseconds: 600),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: CurvedAnimation(
+                parent: animation,
+                curve: Curves.easeInOut,
+              ),
+              child: child,
+            );
+          },
+        ),
+      );
+      return;
+    }
+
+    // Normal slow path for new/logged-out users
     await Future.delayed(const Duration(milliseconds: 200));
     if (!mounted) return;
 
@@ -106,8 +143,7 @@ class _SplashScreenState extends State<SplashScreen>
     _fadeController.forward();
     _pulseController.repeat(reverse: true);
 
-    // Navigate to login after loading completes
-    await Future.delayed(const Duration(milliseconds: 2800));
+    await Future.delayed(const Duration(milliseconds: 2000));
     if (!mounted) return;
 
     Navigator.of(context).pushReplacement(
@@ -238,10 +274,7 @@ class _SplashScreenState extends State<SplashScreen>
               AnimatedBuilder(
                 animation: _fadeController,
                 builder: (context, child) {
-                  return Opacity(
-                    opacity: _subtitleOpacity.value,
-                    child: child,
-                  );
+                  return Opacity(opacity: _subtitleOpacity.value, child: child);
                 },
                 child: Text(
                   'Your AI Fitness Companion',
@@ -262,10 +295,7 @@ class _SplashScreenState extends State<SplashScreen>
               AnimatedBuilder(
                 animation: _fadeController,
                 builder: (context, child) {
-                  return Opacity(
-                    opacity: _progressOpacity.value,
-                    child: child,
-                  );
+                  return Opacity(opacity: _progressOpacity.value, child: child);
                 },
                 child: Column(
                   children: [

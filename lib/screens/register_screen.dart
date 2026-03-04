@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import '../widgets/auth_widgets.dart';
 import 'login_screen.dart';
 import 'register_details_screen.dart';
-import '../state/auth_controller.dart';
+import '../controllers/auth_controller.dart';
 import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
